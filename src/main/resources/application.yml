@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: employee-achievement
+  datasource:
+    url: jdbc:mysql://localhost:3304/employee_achievement
+    username: root
+    password: 123456a@
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+    encoding: UTF-8
+    content-type: text/html
+    cache: true
+

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head"></head>
+<body>
+<div>
+  <h2 th:text="${department == null ? 'Thêm Phòng ban' : 'Sửa Phòng ban'}"></h2>
+  <form th:action="@{${department == null ? '/departments' : '/departments/' + ${department.id}}}" th:object="${department}" method="post">
+    <div>
+      <label for="departmentName">Tên Phòng ban</label>
+      <input type="text" id="departmentName" th:field="*{departmentName}" placeholder="Nhập tên phòng ban" required/>
+    </div>
+    <div>
+      <button type="submit">Lưu</button>
+    </div>
+  </form>
+</div>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

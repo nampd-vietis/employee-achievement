@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<!--  <link rel="stylesheet" th:href="@{/css/navbar.css}">-->
+</head>
+<body>
+<nav th:fragment="navbar">
+  <ul>
+    <li>Trang chủ</li>
+    <li>Quản lý nhân viên</li>
+    <li>Quản lý phòng ban</li>
+    <li>Quản lý tài khoản</li>
+
+    <!-- Menu con cho quản lý thành tích -->
+    <li class="dropdown">
+      <span>Quản lý thành tích</span>
+      <ul class="sub-menu">
+        <li>Tạo mới thành tích</a></li>
+        <li>Xem tổng hợp thành tích cá nhân</li>
+        <li>Xem tổng hợp thành tích của phòng</li>
+      </ul>
+    </li>
+    <li>Đăng xuất</li>
+  </ul>
+</nav>
+</body>
+</html>

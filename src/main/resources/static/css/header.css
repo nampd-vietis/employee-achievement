@@ -1,0 +1,74 @@
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background-color: white;
+    padding: 10px 30px;
+    border-bottom: 1px solid #ddd;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width: 60px; /* Adjust size as needed */
+    margin-right: 10px;
+}
+
+.company-name {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.navigation ul {
+    display: flex;
+    list-style: none;
+}
+
+.navigation ul li {
+    margin: 0 20px;
+}
+
+.navigation ul li a {
+    text-decoration: none;
+    color: black;
+    font-size: 1em;
+    font-weight: 400;
+    transition: color 0.3s;
+}
+
+.navigation ul li a:hover {
+    color: #555;
+}
+
+.connect-button a {
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.connect-button a:hover {
+    background-color: #333;
+}
+
+

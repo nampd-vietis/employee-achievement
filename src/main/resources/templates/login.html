@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Import System</title>
+  <link rel="stylesheet" th:href="@{/css/login.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+</head>
+<body>
+<div class="login-container">
+  <h2>HỆ THỐNG QUẢN LÝ THÀNH TÍCH</h2>
+  <h2>ABC GROUP</h2>
+  <h3>ĐĂNG NHẬP</h3>
+
+  <form th:action="@{/login}" method="post">
+    <div class="form-group">
+      <label for="email">*Email</label>
+      <input type="email" id="email" name="email" placeholder="Email" required>
+    </div>
+    <div class="form-group">
+      <label for="password">*Mật khẩu</label>
+      <input type="password" id="password" name="password" placeholder="Password" required>
+    </div>
+    <div class="forgot-password">
+      <a href="#">Quên mật khẩu</a>
+    </div>
+    <button type="submit" class="login-button">Đăng nhập</button>
+
+    <!-- Hiển thị thông báo lỗi nếu có -->
+    <div class="error-message" th:if="${error}">
+      <p th:text="${error}" style="color:red;"></p>
+    </div>
+  </form>
+</div>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

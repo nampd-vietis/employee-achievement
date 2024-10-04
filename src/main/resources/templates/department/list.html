@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head"></head>
+<body>
+<div>
+    <h2>Danh sách Phòng ban</h2>
+    <a th:href="@{/departments/new}" class="btn btn-primary">Thêm Phòng ban</a>
+    <table>
+        <thead>
+        <tr>
+            <th>Mã Phòng ban</th>
+            <th>Tên Phòng ban</th>
+            <th>Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="department : ${departments}">
+            <td th:text="${department.id}"></td>
+            <td th:text="${department.departmentName}"></td>
+            <td>
+                <a th:href="@{'/departments/edit/' + ${department.id}}">Sửa</a>
+                <a th:href="@{'/departments/delete/' + ${department.id}}">Xóa</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

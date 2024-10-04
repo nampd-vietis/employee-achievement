@@ -1,0 +1,134 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #e0f0ff; /* Màu nền xanh nhạt */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.login-container {
+    background-color: white;
+    padding: 30px;
+    width: 400px;
+    border-radius: 15px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.login-container h2 {
+    color: #007bff;
+}
+
+.login-container h3 {
+    font-size: large;
+    margin-bottom: 20px;
+    color: black;
+    font-weight: bold;
+}
+
+.login-container .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.login-container label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.login-container .login-button {
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.login-container .login-button:hover {
+    background-color: #0056b3;
+}
+
+.login-container .forgot-password {
+    text-align: left;
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
+
+.login-container .forgot-password a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.login-container .forgot-password a:hover {
+    text-decoration: underline;
+}
+
+.login-container .social-login {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.login-container .social-login a {
+    display: inline-block;
+    margin: 5px;
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    color: black;
+}
+
+.login-container .social-login a:hover {
+    background-color: #f1f1f1;
+}
+
+.login-container .social-login img {
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.login-container .divider {
+    position: relative;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.login-container .divider::before,
+.login-container .divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background-color: #ccc;
+}
+
+.login-container .divider::before {
+    left: 0;
+}
+
+.login-container .divider::after {
+    right: 0;
+}
+
+.login-container .divider span {
+    background-color: white;
+    padding: 0 10px;
+}
+
