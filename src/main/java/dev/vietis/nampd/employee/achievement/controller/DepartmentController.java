@@ -43,7 +43,7 @@ public class DepartmentController {
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("department", new DepartmentDTO());
-        return "department/addForm"; // Trả về view form tạo phòng ban
+        return "department/addForm";
     }
 
     // Xử lý tạo mới
@@ -51,10 +51,10 @@ public class DepartmentController {
     public String createDepartment(@ModelAttribute("department") DepartmentDTO departmentDto, Model model) {
         try {
             departmentService.createDepartment(departmentDto);
-            return "redirect:/departments"; // Chuyển hướng về danh sách phòng ban sau khi tạo thành công
+            return "redirect:/departments";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Phòng ban đã tồn tại");
-            return "department/addForm"; // Trả về view tạo phòng ban với lỗi
+            return "department/addForm";
         }
     }
 
@@ -76,10 +76,10 @@ public class DepartmentController {
     public String updateDepartment(@PathVariable Long id, @ModelAttribute("department") DepartmentDTO departmentDto, Model model) {
         try {
             departmentService.updateDepartment(id, departmentDto);
-            return "redirect:/departments"; // Chuyển hướng về danh sách phòng ban sau khi cập nhật thành công
+            return "redirect:/departments";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Phòng ban không tồn tại");
-            return "department/updateForm"; // Trả về view chỉnh sửa phòng ban với lỗi
+            return "department/updateForm";
         }
     }
 
@@ -88,7 +88,7 @@ public class DepartmentController {
     public String deleteDepartment(@PathVariable Long id, Model model) {
         try {
             departmentService.deleteDepartment(id);
-            return "redirect:/departments"; // Chuyển hướng về danh sách phòng ban sau khi xóa thành công
+            return "redirect:/departments";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Phòng ban không tồn tại.");
             return "error"; // Trả về view lỗi

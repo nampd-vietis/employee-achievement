@@ -84,7 +84,7 @@
     <!-- Ngày sinh -->
     <div class="form-group">
       <label for="birthday">Ngày sinh</label>
-      <input type="date" id="birthday" th:field="*{birthday}" placeholder="yyyy/dd/mm" required />
+      <input type="date" id="birthday" th:field="*{birthday}" required />
     </div>
 
     <!-- Chức vụ -->
@@ -143,6 +143,10 @@
     <!-- Ảnh nhân viên -->
     <div class="form-group">
       <label for="photo">Ảnh</label>
+      <img id="imagePreview"
+           th:src="@{/employees/files/{filename}(filename=${employee.photo})}"
+           alt="Ảnh nhân viên"
+           class="img-preview"/>
       <input type="file" id="photo" name="imgFile" accept="image/*" onchange="previewImage(event)" required />
     </div>
 
