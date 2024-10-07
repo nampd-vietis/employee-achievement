@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -27,4 +28,11 @@ public class Department {
     @OneToMany(mappedBy = "department", targetEntity = Employee.class, cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Employee> employeeList;
+
+    public List<Employee> getEmployeeList() {
+        if (employeeList == null) {
+            employeeList = new ArrayList<>(); // Khởi tạo danh sách rỗng
+        }
+        return employeeList;
+    }
 }

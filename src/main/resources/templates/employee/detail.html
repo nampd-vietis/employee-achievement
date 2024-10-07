@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi tiết nhân viên</title>
+  <link rel="stylesheet" th:href="@{/css/header.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <style>
+    .container {
+      display: flex; /* Sử dụng flexbox để căn chỉnh */
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .profile-image {
+      flex: 0 0 150px; /* Đặt chiều rộng cố định cho ảnh */
+      margin-right: 20px; /* Khoảng cách giữa ảnh và thông tin */
+    }
+    .profile-image img {
+      width: 100%;
+      border-radius: 8px; /* Bo tròn các góc của ảnh */
+    }
+    .info {
+      flex-grow: 1; /* Chiếm phần còn lại của chiều ngang */
+    }
+    .info h1 {
+      margin-bottom: 10px; /* Khoảng cách dưới tiêu đề */
+    }
+    .info p {
+      margin: 5px 0; /* Khoảng cách giữa các đoạn văn */
+    }
+    .back-button {
+      margin-top: 20px; /* Khoảng cách trên nút trở về */
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header th:replace="fragments/header :: header"></header>
+
+<!-- Navbar -->
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
+<!-- Main content -->
+<div class="container">
+  <!-- Ảnh nhân viên -->
+  <div class="profile-image">
+    <img th:src="@{${employee.photo}}" alt="Ảnh nhân viên" />
+  </div>
+
+  <!-- Thông tin nhân viên -->
+  <div class="info">
+    <h1 th:text="${employee.fullName}"></h1>
+    <p><strong>ID:</strong> <span th:text="${employee.id}"></span></p>
+    <p><strong>Giới tính:</strong> <span th:text="${employee.getGenderDisplayName()}"></span></p>
+    <p><strong>Ngày sinh:</strong> <span th:text="${employee.birthday}"></span></p>
+    <p><strong>Chức vụ:</strong> <span th:text="${employee.role}"></span></p>
+    <p><strong>Cấp độ:</strong> <span th:text="${employee.level}"></span></p>
+    <p><strong>Lương:</strong> <span th:text="${employee.salary}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${employee.email}"></span></p>
+    <p><strong>SĐT:</strong> <span th:text="${employee.phoneNumber}"></span></p>
+    <p><strong>Phòng ban:</strong> <span th:text="${employee.departmentName}"></span></p>
+    <p><strong>Ghi chú:</strong> <span th:text="${employee.notes}"></span></p>
+  </div>
+</div>
+
+<!-- Nút trở về danh sách -->
+<div class="back-button">
+  <a th:href="@{/employees}" class="button">Danh sách nhân viên</a>
+</div>
+
+<!-- Footer -->
+<footer th:replace="fragments/footer :: footer"></footer>
+
+</body>
+</html>

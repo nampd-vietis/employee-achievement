@@ -1,0 +1,94 @@
+.container {
+    width: 80%;
+    margin: 20px auto;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+button {
+    display: inline-block;
+    background-color: #2196F3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #007bff;
+}
+
+/* Table styles for all list tables */
+.common-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.common-table th, .common-table td {
+    padding: 12px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+.common-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    text-align: center;
+}
+
+.common-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+.common-table td a {
+    color: #2196F3;
+    text-decoration: none;
+}
+
+.common-table td a:hover {
+    text-decoration: underline;
+}
+
+/* Định dạng nút Tạo mới */
+.create-button-container {
+    text-align: right; /* Canh phải */
+    margin-top: 20px;
+}
+
+.create-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: red; /* Nền đỏ */
+    color: white; /* Chữ trắng */
+    text-decoration: none; /* Bỏ gạch chân */
+    border-radius: 5px; /* Góc bo tròn */
+    font-size: 16px;
+    transition: background-color 0.3s ease; /* Hiệu ứng chuyển đổi */
+}
+
+.create-button:hover {
+    background-color: darkred; /* Nền khi hover */
+    cursor: pointer;
+}

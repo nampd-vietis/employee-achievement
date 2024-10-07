@@ -43,7 +43,7 @@ public class LoginController {
         }
     }
 
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); // Xóa session
         return "redirect:/login";

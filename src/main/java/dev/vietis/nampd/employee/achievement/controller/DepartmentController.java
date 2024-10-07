@@ -23,63 +23,63 @@ public class DepartmentController {
     public String getAllDepartments(Model model) {
         List<DepartmentDTO> departments = departmentService.getAllDepartments();
         model.addAttribute("departments", departments);
-        return "department/list"; // Trả về view danh sách phòng ban
+        return "department/list";
     }
 
-    // Lấy phòng ban theo ID
-    @GetMapping("/{id}")
-    public String getDepartmentById(@PathVariable Long id, Model model) {
-        try {
-            DepartmentDTO department = departmentService.getDepartmentById(id);
-            model.addAttribute("department", department);
-            return "department/detail"; // Trả về view chi tiết phòng ban
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", "Department not exist");
-            return "error"; // Trả về view lỗi
-        }
-    }
+//    // Lấy phòng ban theo ID
+//    @GetMapping("/{id}")
+//    public String getDepartmentById(@PathVariable Long id, Model model) {
+//        try {
+//            DepartmentDTO department = departmentService.getDepartmentById(id);
+//            model.addAttribute("department", department);
+//            return "addForm"; // Trả về view chi tiết phòng ban
+//        } catch (IllegalArgumentException e) {
+//            model.addAttribute("error", "Department not exist");
+//            return "error"; // Trả về view lỗi
+//        }
+//    }
 
-    // Hiển thị form tạo phòng ban
+    // Hiển thị form tạo mới
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("department", new DepartmentDTO());
-        return "department/create"; // Trả về view form tạo phòng ban
+        return "department/addForm"; // Trả về view form tạo phòng ban
     }
 
-    // Xử lý tạo phòng ban mới
+    // Xử lý tạo mới
     @PostMapping
     public String createDepartment(@ModelAttribute("department") DepartmentDTO departmentDto, Model model) {
         try {
             departmentService.createDepartment(departmentDto);
             return "redirect:/departments"; // Chuyển hướng về danh sách phòng ban sau khi tạo thành công
         } catch (IllegalArgumentException e) {
-            model.addAttribute("error", "Phòng ban đã tồn tại.");
-            return "department/create"; // Trả về view tạo phòng ban với lỗi
+            model.addAttribute("error", "Phòng ban đã tồn tại");
+            return "department/addForm"; // Trả về view tạo phòng ban với lỗi
         }
     }
 
-    // Hiển thị form chỉnh sửa phòng ban
+    // Hiển thị form chỉnh sửa
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
             DepartmentDTO department = departmentService.getDepartmentById(id);
             model.addAttribute("department", department);
-            return "department/edit"; // Trả về view form chỉnh sửa phòng ban
+            return "department/updateForm"; // Trả về view form chỉnh sửa phòng ban
         } catch (IllegalArgumentException e) {
-            model.addAttribute("error", "Phòng ban không tồn tại.");
+            model.addAttribute("error", "Phòng ban không tồn tại");
             return "error"; // Trả về view lỗi
         }
     }
 
-    // Xử lý cập nhật phòng ban
+    // Xử lý chỉnh sửa
     @PostMapping("/update/{id}")
     public String updateDepartment(@PathVariable Long id, @ModelAttribute("department") DepartmentDTO departmentDto, Model model) {
         try {
             departmentService.updateDepartment(id, departmentDto);
             return "redirect:/departments"; // Chuyển hướng về danh sách phòng ban sau khi cập nhật thành công
         } catch (IllegalArgumentException e) {
-            model.addAttribute("error", "Phòng ban không tồn tại.");
-            return "department/edit"; // Trả về view chỉnh sửa phòng ban với lỗi
+            model.addAttribute("error", "Phòng ban không tồn tại");
+            return "department/updateForm"; // Trả về view chỉnh sửa phòng ban với lỗi
         }
     }
 
@@ -95,16 +95,16 @@ public class DepartmentController {
         }
     }
 
-    // Xem danh sách nhân viên thuộc phòng ban
-    @GetMapping("/{id}/employees")
-    public String getEmployeesInDepartment(@PathVariable Long id, Model model) {
-        try {
-            List<Employee> employees = departmentService.getAllEmployeesInDepartment(id);
-            model.addAttribute("employees", employees);
-            return "employee/list"; // Trả về view danh sách nhân viên trong phòng ban
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", "Phòng ban không tồn tại.");
-            return "error"; // Trả về view lỗi
-        }
-    }
+//    // Xem danh sách nhân viên thuộc phòng ban
+//    @GetMapping("/{id}/employees")
+//    public String getEmployeesInDepartment(@PathVariable Long id, Model model) {
+//        try {
+//            List<Employee> employees = departmentService.getAllEmployeesInDepartment(id);
+//            model.addAttribute("employees", employees);
+//            return "employee/list"; // Trả về view danh sách nhân viên trong phòng ban
+//        } catch (IllegalArgumentException e) {
+//            model.addAttribute("error", "Phòng ban không tồn tại.");
+//            return "error"; // Trả về view lỗi
+//        }
+//    }
 }

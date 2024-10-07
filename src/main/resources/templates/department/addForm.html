@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tạo mới phòng ban</title>
+  <link rel="stylesheet" th:href="@{/css/list.css}">
+  <link rel="stylesheet" th:href="@{/css/header.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+</head>
+<body>
+
+<!-- Header -->
+<header th:replace="fragments/header :: header"></header>
+
+<!-- Navbar -->
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
+<!-- Main content -->
+<div class="container">
+  <h1>Tạo mới phòng ban</h1>
+
+  <form action="#" th:action="@{/departments}" th:object="${department}" method="post">
+    <div class="form-group">
+      <label for="departmentName">Tên phòng ban:</label>
+      <input type="text" id="departmentName" th:field="*{departmentName}" required>
+    </div>
+
+    <button type="submit">Tạo mới</button>
+    <a th:href="@{/departments}" class="cancel-button">Hủy bỏ</a>
+  </form>
+</div>
+
+<!-- Footer -->
+<footer th:replace="fragments/footer :: footer"></footer>
+
+</body>
+</html>

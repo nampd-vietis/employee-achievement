@@ -1,30 +1,63 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: head"></head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý phòng ban</title>
+    <link rel="stylesheet" th:href="@{/css/list.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+</head>
 <body>
-<div>
-    <h2>Danh sách Phòng ban</h2>
-    <a th:href="@{/departments/new}" class="btn btn-primary">Thêm Phòng ban</a>
-    <table>
+
+<!-- Header -->
+<header th:replace="fragments/header :: header"></header>
+
+<!-- Navbar -->
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
+<!-- Main content -->
+<div class="container">
+    <h1>Quản lý phòng ban</h1>
+
+    <!-- Danh sách phòng ban -->
+    <table class="common-table">
         <thead>
         <tr>
-            <th>Mã Phòng ban</th>
-            <th>Tên Phòng ban</th>
-            <th>Hành động</th>
+            <th>Mã phòng ban</th>
+            <th>Tên phòng ban</th>
+            <th>Tác vụ</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="department : ${departments}">
             <td th:text="${department.id}"></td>
             <td th:text="${department.departmentName}"></td>
-            <td>
-                <a th:href="@{'/departments/edit/' + ${department.id}}">Sửa</a>
-                <a th:href="@{'/departments/delete/' + ${department.id}}">Xóa</a>
+            <td style="text-align: center;"> <!-- Căn giữa các button -->
+                <form th:action="@{/departments/{id}/employees(id=${department.id})}" method="get" style="display:inline;">
+                    <button type="submit">Xem dsnv</button>
+                </form> |
+                <form th:action="@{/departments/edit/{id}(id=${department.id})}" method="get" style="display:inline;">
+                    <button type="submit">Sửa</button>
+                </form> |
+                <form th:action="@{/departments/delete/{id}(id=${department.id})}" method="post" style="display:inline;">
+                    <input type="hidden" name="_method" value="delete">
+                    <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa phòng ban này?')">Xóa</button>
+                </form>
             </td>
         </tr>
         </tbody>
     </table>
+
+    <!-- Nút Tạo mới -->
+    <div class="create-button-container">
+        <a href="/departments/new" class="create-button">Tạo mới</a>
+    </div>
 </div>
+
+<!-- Footer -->
 <footer th:replace="fragments/footer :: footer"></footer>
+
 </body>
 </html>

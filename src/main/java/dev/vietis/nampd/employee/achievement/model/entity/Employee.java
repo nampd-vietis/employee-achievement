@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,15 +28,16 @@ public class Employee {
     private String fullName;
 
     @NotNull
-    @Lob
+    @Enumerated(EnumType.STRING)
     @Column(name = "gender", nullable = false)
-    private String gender;
+    private Gender gender;
 
     @Size(max = 255)
     @Column(name = "photo")
     private String photo;
 
     @Column(name = "birthday")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
     @NotNull
@@ -80,5 +82,9 @@ public class Employee {
 
     public enum Role {
         ADMIN, USER;
+    }
+
+    public enum Gender {
+        FEMALE, MALE, OTHER;
     }
 }

@@ -3,6 +3,7 @@ package dev.vietis.nampd.employee.achievement.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,7 +24,19 @@ public class EmployeeDTO {
     private String notes;
     private String password;
     private String role;
-    private Long departmentId;
+    private String departmentName;
 
+    public String getGenderDisplayName() {
+        switch (gender.toUpperCase()) {
+            case "MALE":
+                return "Nam";
+            case "FEMALE":
+                return "Nữ";
+            case "OTHER":
+                return "Khác";
+            default:
+                return "Không xác định"; // Nếu không có giá trị phù hợp
+        }
+    }
 }
 

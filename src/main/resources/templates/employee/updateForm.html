@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cập nhật thông tin nhân viên</title>
+  <link rel="stylesheet" th:href="@{/css/header.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <style>
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    .form-group input[type="file"] {
+      padding: 3px;
+    }
+    .form-group input[type="radio"] {
+      margin-right: 10px;
+    }
+    .form-actions {
+      text-align: right;
+      margin-top: 20px;
+    }
+    .form-actions button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .form-actions button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+<!-- Header -->
+<header th:replace="fragments/header :: header"></header>
+
+<!-- Navbar -->
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
+<!-- Main content -->
+<div class="container">
+  <h1>Cập nhật thông tin nhân viên</h1>
+
+  <form th:action="@{/employees}" th:object="${employee}" method="post" enctype="multipart/form-data">
+    <!-- Họ và tên -->
+    <div class="form-group">
+      <label for="fullName">Họ và tên</label>
+      <input type="text" id="fullName" th:field="*{fullName}" placeholder="Nhập họ và tên" required />
+    </div>
+
+    <!-- Giới tính -->
+    <div class="form-group">
+      <label>Giới tính</label>
+      <input type="radio" id="male" th:field="*{gender}" value="MALE" />
+      <label for="male">Nam</label>
+      <input type="radio" id="female" th:field="*{gender}" value="FEMALE" />
+      <label for="female">Nữ</label>
+      <input type="radio" id="other" th:field="*{gender}" value="OTHER" />
+      <label for="other">Khác</label>
+    </div>
+
+    <!-- Ngày sinh -->
+    <div class="form-group">
+      <label for="birthday">Ngày sinh</label>
+      <input type="date" id="birthday" th:field="*{birthday}" placeholder="yyyy/dd/mm" required />
+    </div>
+
+    <!-- Chức vụ -->
+    <div class="form-group">
+      <label for="role">Chức vụ</label>
+      <select id="role" th:field="*{role}">
+        <option value="ADMIN">Admin</option>
+        <option value="USER">Nhân viên</option>
+      </select>
+    </div>
+
+    <!-- Cấp độ -->
+    <div class="form-group">
+      <label for="level">Cấp độ</label>
+      <input type="number" id="level" th:field="*{level}" placeholder="Nhập cấp độ" required />
+    </div>
+
+    <!-- Lương -->
+    <div class="form-group">
+      <label for="salary">Lương</label>
+      <input type="number" id="salary" th:field="*{salary}" step="0.01" placeholder="Nhập mức lương" required />
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" th:field="*{email}" placeholder="Nhập email" required />
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" th:field="*{password}" placeholder="Nhập password" required />
+    </div>
+
+    <!-- Số điện thoại -->
+    <div class="form-group">
+      <label for="phoneNumber">Số điện thoại</label>
+      <input type="text" id="phoneNumber" th:field="*{phoneNumber}" placeholder="Nhập số điện thoại" required />
+    </div>
+
+    <!-- Phòng ban -->
+    <div class="form-group">
+      <label for="departmentName">Phòng ban</label>
+      <select id="departmentName" th:field="*{departmentName}">
+        <option th:each="department : ${departments}" th:value="${department.departmentName}" th:text="${department.departmentName}"></option>
+      </select>
+    </div>
+
+    <!-- Ghi chú -->
+    <div class="form-group">
+      <label for="notes">Ghi chú</label>
+      <textarea id="notes" th:field="*{notes}" rows="3"></textarea>
+    </div>
+
+    <!-- Ảnh nhân viên -->
+    <div class="form-group">
+      <label for="photo">Ảnh</label>
+      <input type="file" id="photo" name="imgFile" accept="image/*" onchange="previewImage(event)" required />
+    </div>
+
+
+    <!-- Nút Submit -->
+    <div class="form-actions">
+      <button type="submit">Xác nhận</button>
+    </div>
+
+    <!-- Nút hủy -->
+    <div class="back-button">
+      <a th:href="@{/employees}" class="button">Hủy</a>
+    </div>
+  </form>
+
+  <div id="toast-error" style="color: red; text-align: center; font-size: 16px; margin: 20px 0;">
+    <span th:text="${error}"></span> <!-- Cập nhật để lấy thông báo lỗi -->
+  </div>
+</div>
+
+<!-- Footer -->
+<footer th:replace="fragments/footer :: footer"></footer>
+
+<script>
+  function previewImage(event) {
+    const input = event.target;
+    const file = input.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const imagePreview = document.getElementById('preview-image');
+        imagePreview.src = e.target.result;
+        imagePreview.style.display = 'block';
+      }
+      reader.readAsDataURL(file);
+    }
+  }
+
+  window.onload = function () {
+    setTimeout(function () {
+      var toastElement = document.getElementById("toast-error");
+      console.log(toastElement)
+      if (toastElement) {
+        toastElement.style.display = "none";
+      }
+    }, 3000);
+  };
+</script>
+
+</body>
+</html>

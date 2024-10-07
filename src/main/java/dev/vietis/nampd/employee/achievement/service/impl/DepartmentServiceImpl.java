@@ -6,6 +6,7 @@ import dev.vietis.nampd.employee.achievement.model.entity.Department;
 import dev.vietis.nampd.employee.achievement.model.entity.Employee;
 import dev.vietis.nampd.employee.achievement.repository.DepartmentRepository;
 import dev.vietis.nampd.employee.achievement.service.DepartmentService;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public List<DepartmentDTO> getAllDepartments() {
-        return departmentRepository.findAll()
+        return departmentRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))
                 .stream()
                 .map(departmentMapper::toDepartmentDto)
                 .collect(Collectors.toList());

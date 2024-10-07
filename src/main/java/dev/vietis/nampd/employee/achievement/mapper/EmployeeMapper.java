@@ -12,7 +12,7 @@ public class EmployeeMapper {
         return new EmployeeDTO(
                 employee.getId(),
                 employee.getFullName(),
-                employee.getGender(),
+                employee.getGender().toString(),
                 employee.getPhoto(),
                 employee.getBirthday(),
                 employee.getSalary(),
@@ -22,7 +22,7 @@ public class EmployeeMapper {
                 employee.getNotes(),
                 employee.getPassword(),
                 employee.getRole().toString(),
-                employee.getDepartment().getId()
+                employee.getDepartment().getDepartmentName()
         );
     }
 
@@ -34,7 +34,7 @@ public class EmployeeMapper {
         Employee employee = new Employee();
 
         employee.setFullName(employeeDto.getFullName());
-        employee.setGender(employeeDto.getGender());
+        employee.setGender(Employee.Gender.valueOf(employeeDto.getGender()));
         employee.setPhoto(employeeDto.getPhoto());
         employee.setBirthday(employeeDto.getBirthday());
         employee.setSalary(employeeDto.getSalary());

@@ -1,36 +1,80 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: head"></head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý nhân viên</title>
+  <link rel="stylesheet" th:href="@{/css/list.css}">
+  <link rel="stylesheet" th:href="@{/css/header.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+</head>
 <body>
-<div>
-  <h2>Danh sách Nhân viên</h2>
-  <a th:href="@{/employees/new}" class="btn btn-primary">Thêm Nhân viên</a>
-  <form th:action="@{/employees/search}" method="get">
-    <input type="text" name="keyword" placeholder="Tìm kiếm..." />
-    <button type="submit">Tìm</button>
-  </form>
-  <table>
+
+<!-- Header -->
+<header th:replace="fragments/header :: header"></header>
+
+<!-- Navbar -->
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
+<!-- Main content -->
+<div class="container">
+  <h1>Quản lý nhân viên</h1>
+
+  <!-- Danh sách nhân viên -->
+  <table class="common-table">
     <thead>
     <tr>
-      <th>Mã Nhân viên</th>
-      <th>Họ và Tên</th>
+      <th>ID</th>
+      <th>Tên nhân viên</th>
+      <th>Giới tính</th>
+      <th>Ngày sinh</th>
+      <th>Cấp độ</th>
+      <th>Email</th>
+      <th>SĐT</th>
       <th>Phòng ban</th>
-      <th>Hành động</th>
+      <th>Ghi chú</th>
+      <th>Tác vụ</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="employee : ${employees}">
       <td th:text="${employee.id}"></td>
       <td th:text="${employee.fullName}"></td>
-      <td th:text="${employee.department.departmentName}"></td>
-      <td>
-        <a th:href="@{'/employees/edit/' + ${employee.id}}">Sửa</a>
-        <a th:href="@{'/employees/delete/' + ${employee.id}}">Xóa</a>
+      <td th:text="${employee.getGenderDisplayName()}"></td>
+      <td th:text="${employee.birthday}"></td>
+      <td th:text="${employee.level}"></td>
+      <td th:text="${employee.email}"></td>
+      <td th:text="${employee.phoneNumber}"></td>
+      <td th:text="${employee.departmentName}"></td>
+      <td th:text="${employee.notes}"></td>
+      <td style="text-align: center;"> <!-- Căn giữa các button -->
+        <!-- Button xem chi tiết -->
+        <form th:action="@{/employees/{id}(id=${employee.id})}" method="get" style="display:inline;">
+          <button type="submit">Xem chi tiết</button>
+        </form> |
+        <!-- Button sửa thông tin -->
+        <form th:action="@{/employees/edit/{id}(id=${employee.id})}" method="get" style="display:inline;">
+          <button type="submit">Sửa</button>
+        </form> |
+        <!-- Button xóa nhân viên -->
+        <form th:action="@{/employees/delete/{id}(id=${employee.id})}" method="post" style="display:inline;">
+          <input type="hidden" name="_method" value="delete">
+          <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa nhân viên này?')">Xóa</button>
+        </form>
       </td>
     </tr>
     </tbody>
   </table>
+
+  <!-- Nút Tạo mới -->
+  <div class="create-button-container">
+    <a href="/employees/new" class="create-button">Tạo mới</a>
+  </div>
 </div>
+
+<!-- Footer -->
 <footer th:replace="fragments/footer :: footer"></footer>
+
 </body>
 </html>
