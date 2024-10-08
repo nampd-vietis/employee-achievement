@@ -1,10 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý thành tích/kỷ luật</title>
+    <link rel="stylesheet" th:href="@{/css/list.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
 </head>
 <body>
+
+<!-- Header -->
+<header th:replace="fragments/header :: header"></header>
+
+<!-- Navbar -->
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
+<!-- Main content -->
+<div class="container">
+    <h1>Quản lý thành tích/kỷ luật</h1>
+
+    <table class="common-table">
+        <thead>
+        <tr>
+            <th>Mã</th>
+            <th>Tên nhân viên</th>
+            <th>Loại</th>
+            <th>Lý do ghi nhận</th>
+            <th>Ngày ghi nhận</th>
+            <th>Tác vụ</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="achievement : ${achievements}">
+            <td th:text="${achievement.id}"></td>
+            <td th:text="${achievement.employee.fullName}"></td>
+            <td>
+                <span th:if="${achievement.type == 1}" th:text="'Thành tích'"></span>
+                <span th:if="${achievement.type == 0}" th:text="'Kỷ luật'"></span>
+            </td>
+            <td th:text="${achievement.reason}"></td>
+            <td th:text="${achievement.dateRecorded}"></td>
+            <td style="text-align: center;"> <!-- Căn giữa các button -->
+                <form th:action="@{/achievements/edit/{id}(id=${achievement.id})}" method="get" style="display:inline;">
+                    <button type="submit">Sửa</button>
+                </form> |
+                <form th:action="@{/achievements/delete/{id}(id=${achievement.id})}" method="post" style="display:inline;">
+                    <input type="hidden" name="_method" value="delete">
+                    <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa thành tích/kỷ luật này?')">Xóa</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Nút Tạo mới -->
+    <div class="create-button-container">
+        <a href="/achievements/new" class="create-button">Tạo mới</a>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer th:replace="fragments/footer :: footer"></footer>
 
 </body>
 </html>

@@ -2,9 +2,9 @@ spring:
   application:
     name: employee-achievement
   datasource:
-    url: jdbc:mysql://localhost:3306/employee_achievement
+    url: jdbc:mysql://localhost:3304/employee_achievement
     username: root
-    password: Passw0rd
+    password: 123456a@
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect

@@ -92,3 +92,24 @@ button:hover {
     background-color: darkred; /* Nền khi hover */
     cursor: pointer;
 }
+
+/* Style cho các thẻ input, select, textarea */
+input[type="text"],
+input[type="date"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+/* Giới hạn chiều cao cho textarea */
+textarea {
+    resize: vertical;
+    min-height: 100px;
+    max-height: 300px;
+}

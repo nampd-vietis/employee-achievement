@@ -1,10 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Cập nhật thành tích/kỷ luật</title>
+    <link rel="stylesheet" th:href="@{/css/list.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <style>
+        form {
+            width: 50%; /* Chiều rộng của form */
+            margin: 0 auto; /* Căn giữa form */
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style cho các thẻ input, select, textarea */
+        input[type="text"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%; /* Đảm bảo chiều rộng của thẻ input, textarea, select vừa với form */
+            padding: 8px; /* Thêm khoảng cách giữa nội dung và viền */
+            margin-bottom: 15px; /* Khoảng cách dưới các trường */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        /* Giới hạn chiều rộng của textarea */
+        textarea {
+            width: 100%; /* Đảm bảo textarea không bị quá dài */
+            resize: none; /* Không cho phép kéo dài textarea */
+            height: 100px; /* Chiều cao cố định */
+        }
+
+    </style>
 </head>
 <body>
+
+<!-- Header -->
+<header th:replace="fragments/header :: header"></header>
+
+<!-- Navbar -->
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
+<h1>Cập nhật thành tích/kỷ luật</h1>
+
+<form th:action="@{/achievements/update/{id}(id=${achievement.id})}" th:object="${achievement}" method="post">
+    <label for="employee">Nhân viên:</label>
+    <select id="employee" th:field="*{employee.id}">
+        <option th:each="employee : ${employees}"
+                th:value="${employee.id}"
+                th:text="${employee.id + ' - ' + employee.fullName}">
+        </option>
+    </select><br><br>
+
+    <label for="type">Loại:</label>
+    <select id="type" th:field="*{type}">
+        <option value="1">Thành tích</option>
+        <option value="0">Kỷ luật</option>
+    </select><br><br>
+
+    <label for="reason">Lý do:</label>
+    <textarea id="reason" th:field="*{reason}" rows="3" cols="40"></textarea><br><br>
+
+    <label for="dateRecorded">Ngày ghi nhận:</label>
+    <input type="date" id="dateRecorded" name="dateRecorded" th:value="*{dateRecorded}"><br><br>
+
+    <button type="submit">Xác nhận</button>
+    <a th:href="@{/achievements}" class="cancel-button">Hủy bỏ</a>
+</form>
+
+<!-- Footer -->
+<footer th:replace="fragments/footer :: footer"></footer>
 
 </body>
 </html>

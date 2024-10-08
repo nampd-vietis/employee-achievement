@@ -2,15 +2,43 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <title>Trang chủ</title>
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 <body>
+
+<!-- Header -->
 <header th:replace="fragments/header :: header"></header>
-<div th:replace="fragments/navbar :: navbar"></div>
+
+<!-- Navbar -->
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
+<!-- Main content -->
+<div class="container">
+    <h1>Top 10 nhân viên có thành tích cao nhất</h1>
+
+    <div class="employee-grid">
+        <div th:each="topEmployee, iterStat : ${topEmployees}" class="employee-card">
+            <div class="employee-index">
+                <span th:text="${iterStat.index + 1}">1</span> <!-- Hiển thị số thứ tự -->
+            </div>
+            <img th:src="@{/employees/files/{filename}(filename=${topEmployee.employee.photo})}" alt="employee photo" class="employee-photo">
+            <div class="employee-info">
+                <h2 th:text="${topEmployee.employee.fullName}"></h2>
+                <p th:text="${topEmployee.employee.department.departmentName}"></p>
+            </div>
+            <div class="points-info">
+                <p>Điểm thưởng: <span th:text="${topEmployee.rewardPoints}"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
 <footer th:replace="fragments/footer :: footer"></footer>
+
 </body>
 </html>

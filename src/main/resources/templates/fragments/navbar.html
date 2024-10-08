@@ -6,18 +6,18 @@
 <body>
 <nav th:fragment="navbar" class="navbar">
   <ul>
-    <li>Trang chủ</li>
+    <li><a th:href="@{/home}">Trang chủ</a></li>
     <li><a th:href="@{/departments}">Quản lý phòng ban</a></li>
     <li><a th:href="@{/employees}"> Quản lý nhân viên</a></li>
 
     <!-- Menu con cho quản lý thành tích -->
     <li class="dropdown">
-      <span><a th:ref="@{/achievements}"> Quản lý thành tích/kỷ luật</a></span>
-      <ul class="sub-menu">
-        <li>Tạo mới thành tích/kỷ luật</a></li>
-        <li>Tổng hợp thành tích cá nhân</li>
-        <li>Tổng hợp thành tích của phòng</li>
-      </ul>
+      <span>Quản lý thành tích</span>
+      <div class="sub-menu">
+        <a th:href="@{/achievements}">Danh sách thành tích/kỷ luật</a>
+        <a th:href="@{/achievements/employee}">Tổng hợp thành tích cá nhân</a>
+        <a th:href="@{/achievements/department}">Tổng hợp thành tích của phòng</a>
+      </div>
     </li>
 
     <li><a th:href="@{/logout}" methods="post">Đăng xuất</a></li>

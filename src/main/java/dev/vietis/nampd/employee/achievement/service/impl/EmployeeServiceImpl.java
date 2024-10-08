@@ -10,16 +10,11 @@ import dev.vietis.nampd.employee.achievement.service.EmployeeService;
 import dev.vietis.nampd.employee.achievement.service.FileStorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -38,13 +33,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee createEmployee(EmployeeDTO employeeDto) {
+    public void createEmployee(EmployeeDTO employeeDto) {
         Employee employee = employeeMapper.toEmployee(employeeDto);
+
+        if (employeeRepository.existsByEmail(employee.getEmail())) {
+            throw new RuntimeException("Email đã tồn tại: " + employee.getEmail());
+        }
+
         Department department = departmentRepository.findByDepartmentName(employeeDto.getDepartmentName())
                 .orElseThrow(() -> new NoSuchElementException("Department not found"));
 
         employee.setDepartment(department);
-        return employeeRepository.save(employee);
+        employeeRepository.save(employee);
     }
 
     @Override
@@ -70,24 +70,20 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeDTO updateEmployee(EmployeeDTO updatedEmployeeDTO, MultipartFile imgFile) {
+    public void updateEmployee(Long id, EmployeeDTO updatedEmployeeDTO, MultipartFile imgFile) {
         Employee existingEmployee = employeeRepository.findById(updatedEmployeeDTO.getId())
                 .orElseThrow(() -> new NoSuchElementException("Employee not found"));
 
         existingEmployee.setFullName(updatedEmployeeDTO.getFullName());
-        existingEmployee.setGender(Employee.Gender.valueOf(updatedEmployeeDTO.getGenderDisplayName()));
+        existingEmployee.setGender(Employee.Gender.valueOf(updatedEmployeeDTO.getGender()));
 
-        // Ktra xem có ảnh không
-        if (updatedEmployeeDTO.getPhoto() != null && !updatedEmployeeDTO.getPhoto().isEmpty()) {
-            // Nếu có, xóa
-            if (existingEmployee.getPhoto() != null) {
-                fileStorageService.delete(existingEmployee.getPhoto());
-            }
-            // Lưu ảnh mới
-            fileStorageService.save(imgFile);
-            String newImgFilename = imgFile.getOriginalFilename();
-            existingEmployee.setPhoto(newImgFilename); // Cập nhật đường dẫn ảnh mới
+        // Kiểm tra và xử lý ảnh mới
+        if (imgFile != null && !imgFile.isEmpty() && !Objects.requireNonNull(imgFile.getOriginalFilename()).isEmpty()) {
+            String newImgFilename = fileStorageService.save(imgFile);  // Lưu file mới
+            updatedEmployeeDTO.setPhoto(newImgFilename);               // Cập nhật đường dẫn file mới
+            existingEmployee.setPhoto(newImgFilename);                 // Cập nhật ảnh cho nhân viên
         }
+
         existingEmployee.setBirthday(updatedEmployeeDTO.getBirthday());
         existingEmployee.setSalary(updatedEmployeeDTO.getSalary());
         existingEmployee.setLevel(updatedEmployeeDTO.getLevel());
@@ -102,7 +98,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         existingEmployee.setDepartment(department);
 
-        return employeeMapper.toEmployeeDto(employeeRepository.save(existingEmployee));
+        employeeRepository.save(existingEmployee);
     }
 
     @Override

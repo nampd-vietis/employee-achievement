@@ -1,14 +1,17 @@
 package dev.vietis.nampd.employee.achievement.service.impl;
 
-import dev.vietis.nampd.employee.achievement.mapper.AchievementMapper;
-import dev.vietis.nampd.employee.achievement.model.dto.AchievementDTO;
+import dev.vietis.nampd.employee.achievement.model.dto.DepartmentAchievementsSumDTO;
+import dev.vietis.nampd.employee.achievement.model.dto.EmployeeAchievementsSumDTO;
 import dev.vietis.nampd.employee.achievement.model.entity.Achievement;
+import dev.vietis.nampd.employee.achievement.model.entity.Department;
 import dev.vietis.nampd.employee.achievement.model.entity.Employee;
 import dev.vietis.nampd.employee.achievement.repository.AchievementRepository;
+import dev.vietis.nampd.employee.achievement.repository.DepartmentRepository;
 import dev.vietis.nampd.employee.achievement.repository.EmployeeRepository;
 import dev.vietis.nampd.employee.achievement.service.AchievementService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -16,59 +19,60 @@ import java.util.stream.Collectors;
 @Service
 public class AchievementServiceImpl implements AchievementService {
     private final AchievementRepository achievementRepository;
-    private final AchievementMapper achievementMapper;
     private final EmployeeRepository employeeRepository;
+    private final DepartmentRepository departmentRepository;
 
-    public AchievementServiceImpl(AchievementRepository achievementRepository, AchievementMapper achievementMapper, EmployeeRepository employeeRepository) {
+    public AchievementServiceImpl(AchievementRepository achievementRepository, EmployeeRepository employeeRepository, DepartmentRepository departmentRepository) {
         this.achievementRepository = achievementRepository;
-        this.achievementMapper = achievementMapper;
         this.employeeRepository = employeeRepository;
+        this.departmentRepository = departmentRepository;
     }
 
     @Override
-    public AchievementDTO createAchievement(AchievementDTO achievementDto) {
-        Employee employee = employeeRepository.findById(achievementDto.getEmployeeId())
+    public Achievement createAchievement(Achievement achievement) {
+        Employee employee = employeeRepository.findById(achievement.getEmployee().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
 
-        Achievement achievement = achievementMapper.toAchievement(achievementDto);
         achievement.setEmployee(employee);
 
-        return achievementMapper.toAchievementDto(achievementRepository.save(achievement));
+        return achievementRepository.save(achievement);
     }
 
     @Override
-    public List<AchievementDTO> getAllAchievements() {
-        return achievementRepository.findAll().stream()
-                .map(achievementMapper::toAchievementDto)
-                .collect(Collectors.toList());
+    public List<Achievement> getAllAchievements() {
+        return new ArrayList<>(achievementRepository.findAll());
     }
 
     @Override
-    public List<AchievementDTO> getAchievementByEmployeeId(Long employeeId) {
+    public List<Achievement> getAchievementByEmployeeId(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
 
         List<Achievement> achievements = achievementRepository.findByEmployeeId(employeeId);
 
-        return achievements.stream()
-                        .map(achievementMapper::toAchievementDto).
-                        collect(Collectors.toList());
+        return new ArrayList<>(achievements);
     }
 
     @Override
-    public AchievementDTO updateAchievement(Long achievementId, AchievementDTO updatedAchievementDTO) {
+    public Achievement getAchievementById(Long achievementId) {
+        return achievementRepository.findById(achievementId)
+                .orElseThrow(() -> new IllegalArgumentException("Achievement not found"));
+    }
+
+    @Override
+    public Achievement updateAchievement(Long achievementId, Achievement updatedAchievement) {
         Achievement existingAchievement = achievementRepository.findById(achievementId)
                 .orElseThrow(() -> new NoSuchElementException("Achievement not found"));
 
-        existingAchievement.setType(updatedAchievementDTO.getType());
-        existingAchievement.setReason(updatedAchievementDTO.getReason());
-        existingAchievement.setDateRecorded(updatedAchievementDTO.getDateRecorded());
+        existingAchievement.setType(updatedAchievement.getType());
+        existingAchievement.setReason(updatedAchievement.getReason());
+        existingAchievement.setDateRecorded(updatedAchievement.getDateRecorded());
 
-        Employee employee = employeeRepository.findById(updatedAchievementDTO.getEmployeeId())
+        Employee employee = employeeRepository.findById(updatedAchievement.getEmployee().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
         existingAchievement.setEmployee(employee);
 
-        return achievementMapper.toAchievementDto(achievementRepository.save(existingAchievement));
+        return achievementRepository.save(existingAchievement);
     }
 
     @Override
@@ -77,5 +81,35 @@ public class AchievementServiceImpl implements AchievementService {
             throw new NoSuchElementException("Achievement not found");
         }
         achievementRepository.deleteById(achievementId);
+    }
+
+    @Override
+    public List<EmployeeAchievementsSumDTO> getEmployeeAchievementsSum() {
+        List<Employee> employees = employeeRepository.findAll();
+        return employees.stream()
+                .map(employee -> {
+                    long totalAchievements = achievementRepository.countByEmployeeAndType(employee, (byte) 1);
+                    long totalDisciplines = achievementRepository.countByEmployeeAndType(employee, (byte) 0);
+                    int rewardPoints = calculateRewardPoints(totalAchievements, totalDisciplines);
+                    return new EmployeeAchievementsSumDTO(employee, totalAchievements, totalDisciplines, rewardPoints);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DepartmentAchievementsSumDTO> getDepartmentAchievementsSum() {
+        List<Department> departments = departmentRepository.findAll();
+        return departments.stream()
+                .map(department -> {
+                    long totalAchievements = achievementRepository.countByEmployeeDepartmentAndType(department, (byte) 1);
+                    long totalDisciplines = achievementRepository.countByEmployeeDepartmentAndType(department, (byte) 0);
+                    int rewardPoints = calculateRewardPoints(totalAchievements, totalDisciplines);
+                    return new DepartmentAchievementsSumDTO(department, totalAchievements, totalDisciplines, rewardPoints);
+                })
+                .collect(Collectors.toList());
+    }
+
+    private int calculateRewardPoints(long totalAchievements, long totalDisciplines) {
+        return (int) (totalAchievements - totalDisciplines);
     }
 }

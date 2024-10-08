@@ -1,17 +1,24 @@
 package dev.vietis.nampd.employee.achievement.service;
 
-import dev.vietis.nampd.employee.achievement.model.dto.AchievementDTO;
+import dev.vietis.nampd.employee.achievement.model.dto.DepartmentAchievementsSumDTO;
+import dev.vietis.nampd.employee.achievement.model.dto.EmployeeAchievementsSumDTO;
+import dev.vietis.nampd.employee.achievement.model.entity.Achievement;
 
 import java.util.List;
 
 public interface AchievementService {
-    AchievementDTO createAchievement(AchievementDTO achievementDto);
+    Achievement createAchievement(Achievement achievement);
 
-    List<AchievementDTO> getAllAchievements();
+    List<Achievement> getAllAchievements();
 
-    List<AchievementDTO> getAchievementByEmployeeId(Long employeeId);
+    List<Achievement> getAchievementByEmployeeId(Long employeeId);
+    Achievement getAchievementById(Long achievementId);
 
-    AchievementDTO updateAchievement(Long achievementId, AchievementDTO updatedAchievementDTO);
+    Achievement updateAchievement(Long achievementId, Achievement updatedAchievement);
 
     void deleteAchievement(Long achievementId);
+
+    List<EmployeeAchievementsSumDTO> getEmployeeAchievementsSum();
+    List<DepartmentAchievementsSumDTO> getDepartmentAchievementsSum();
+
 }

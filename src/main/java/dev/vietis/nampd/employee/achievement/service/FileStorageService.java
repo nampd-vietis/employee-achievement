@@ -9,11 +9,9 @@ import java.nio.file.Path;
 public interface FileStorageService {
     void init();
 
-    void save(MultipartFile file);
+    String save(MultipartFile file);
 
     Resource load(String filename);
 
     boolean delete(String filename);
-
-    void deleteAll();
 }

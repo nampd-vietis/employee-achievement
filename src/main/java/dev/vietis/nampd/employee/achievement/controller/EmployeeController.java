@@ -6,6 +6,7 @@ import dev.vietis.nampd.employee.achievement.service.DepartmentService;
 import dev.vietis.nampd.employee.achievement.service.EmployeeService;
 import dev.vietis.nampd.employee.achievement.service.FileStorageService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/employees")
 public class EmployeeController {
@@ -105,19 +107,19 @@ public class EmployeeController {
 
     // Xử lý chỉnh sửa
     @PostMapping("/update/{id}")
-    public String updateEmployee(@ModelAttribute("employee") EmployeeDTO employeeDTO,
+    public String updateEmployee(@PathVariable Long id,
+                                 @ModelAttribute("employee") EmployeeDTO employeeDTO,
                                  @RequestParam("imgFile") MultipartFile imgFile,
                                  Model model) {
         try {
-            // Gọi service để cập nhật nhân viên, truyền vào photo
-            employeeService.updateEmployee(employeeDTO, imgFile);
+            employeeService.updateEmployee(id, employeeDTO, imgFile);
             return "redirect:/employees";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Nhân viên không tồn tại");
-            return "employee/updateForm"; // Trả về form cập nhật
+            return "employee/updateForm";
         } catch (Exception e) {
             model.addAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
-            return "employee/updateForm"; // Trả về form cập nhật nếu có lỗi
+            return "employee/updateForm";
         }
     }
 
@@ -141,4 +143,7 @@ public class EmployeeController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +"anh" + "\"")
                 .body(file);
     }
+
+//    @GetMapping("/search")
+
 }

@@ -13,6 +13,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
@@ -28,17 +29,23 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public void save(MultipartFile file) {
+    public String save(MultipartFile file) {
         try {
-            Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()));
-        } catch (Exception e) {
-            if (e instanceof FileAlreadyExistsException) {
-                throw new RuntimeException("A file of that name already exists.");
+            String originalFilename = file.getOriginalFilename();
+
+            if (originalFilename == null || originalFilename.isEmpty()) {
+                throw new RuntimeException("File name is invalid");
             }
 
-            throw new RuntimeException(e.getMessage());
+            Files.copy(file.getInputStream(), this.root.resolve(originalFilename));
+
+            return originalFilename;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Could not save file: " + e.getMessage());
         }
     }
+
 
     @Override
     public Resource load(String filename) {
@@ -54,7 +61,6 @@ public class FileStorageServiceImpl implements FileStorageService {
         } catch (MalformedURLException e) {
             throw new RuntimeException("Error: " + e.getMessage());
         }
-
     }
 
     @Override
@@ -65,10 +71,5 @@ public class FileStorageServiceImpl implements FileStorageService {
         } catch (IOException e) {
             throw new RuntimeException("Error: " + e.getMessage());
         }
-    }
-
-    @Override
-    public void deleteAll() {
-        FileSystemUtils.deleteRecursively(root.toFile());
     }
 }

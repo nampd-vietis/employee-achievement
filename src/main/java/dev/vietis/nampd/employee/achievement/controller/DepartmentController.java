@@ -73,9 +73,11 @@ public class DepartmentController {
 
     // Xử lý chỉnh sửa
     @PostMapping("/update/{id}")
-    public String updateDepartment(@PathVariable Long id, @ModelAttribute("department") DepartmentDTO departmentDto, Model model) {
+    public String updateDepartment(@PathVariable Long id,
+                                   @ModelAttribute("department") DepartmentDTO departmentDTO,
+                                   Model model) {
         try {
-            departmentService.updateDepartment(id, departmentDto);
+            departmentService.updateDepartment(id, departmentDTO);
             return "redirect:/departments";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Phòng ban không tồn tại");

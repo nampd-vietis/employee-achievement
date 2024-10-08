@@ -105,7 +105,7 @@
         <!-- Lương -->
         <div class="form-group">
             <label for="salary">Lương</label>
-            <input type="number" id="salary" th:field="*{salary}" step="0.01" placeholder="Nhập mức lương" required />
+            <input type="number" id="salary" th:field="*{salary}" step="1" placeholder="Nhập mức lương" required />
         </div>
 
         <!-- Email -->
@@ -143,9 +143,11 @@
         <!-- Ảnh nhân viên -->
         <div class="form-group">
             <label for="photo">Ảnh</label>
+            <img id="imagePreview"
+                 alt="Ảnh nhân viên"
+                 class="img-preview"/>
             <input type="file" id="photo" name="imgFile" accept="image/*" onchange="previewImage(event)" required />
         </div>
-
 
         <!-- Nút Submit -->
         <div class="form-actions">
@@ -174,7 +176,7 @@
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                const imagePreview = document.getElementById('preview-image');
+                const imagePreview = document.getElementById('img-preview');
                 imagePreview.src = e.target.result;
                 imagePreview.style.display = 'block';
             }

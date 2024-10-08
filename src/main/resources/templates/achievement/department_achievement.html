@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Tổng hợp thành tích phòng ban</title>
+  <link rel="stylesheet" th:href="@{/css/list.css}">
+  <link rel="stylesheet" th:href="@{/css/header.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+</head>
+<body>
+
+<!-- Header -->
+<header th:replace="fragments/header :: header"></header>
+
+<!-- Navbar -->
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
+<h1>Tổng hợp thành tích phòng ban</h1>
+
+<div class="container">
+  <table class="common-table" border="1">
+    <thead>
+    <tr>
+      <th>Phòng ban</th>
+      <th>Tổng thành tích</th>
+      <th>Tổng kỷ luật</th>
+      <th>Điểm thưởng</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="summary : ${departmentSum}">
+      <td th:text="${summary.department.departmentName}"></td>
+      <td th:text="${summary.totalAchievements}"></td>
+      <td th:text="${summary.totalDisciplines}"></td>
+      <td th:text="${summary.rewardPoints}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Footer -->
+<footer th:replace="fragments/footer :: footer"></footer>
+
+</body>
+</html>
