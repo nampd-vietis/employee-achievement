@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tạo mới phòng ban</title>
+  <title th:text="#{title.create_department}">Tạo mới phòng ban</title>
   <link rel="stylesheet" th:href="@{/css/list.css}">
   <link rel="stylesheet" th:href="@{/css/header.css}">
   <link rel="stylesheet" th:href="@{/css/footer.css}">
@@ -19,16 +19,16 @@
 
 <!-- Main content -->
 <div class="container">
-  <h1>Tạo mới phòng ban</h1>
+  <h1 th:text="#{title.create_department}">Tạo mới phòng ban</h1>
 
   <form action="#" th:action="@{/admin/departments}" th:object="${department}" method="post">
     <div class="form-group">
-      <label for="departmentName">Tên phòng ban:</label>
+      <label for="departmentName" th:text="#{label.department_name}">Tên phòng ban:</label>
       <input type="text" id="departmentName" th:field="*{departmentName}" required>
     </div>
 
-    <button type="submit">Xác nhận</button>
-    <a th:href="@{/admin/departments}" class="cancel-button">Hủy bỏ</a>
+    <button type="submit" th:text="#{button.submit}">Xác nhận</button>
+    <a th:href="@{/admin/departments}" class="cancel-button" th:text="#{button.cancel}">Hủy bỏ</a>
   </form>
 </div>
 

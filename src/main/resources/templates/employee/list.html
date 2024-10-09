@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quản lý nhân viên</title>
+  <title th:text="#{title.manage_employee}">Quản lý nhân viên</title>
   <link rel="stylesheet" th:href="@{/css/list.css}">
   <link rel="stylesheet" th:href="@{/css/header.css}">
   <link rel="stylesheet" th:href="@{/css/footer.css}">
@@ -55,7 +55,7 @@
 
 <!-- Main content -->
 <div class="container">
-  <h1>Quản lý nhân viên</h1>
+  <h1 th:text="#{title.manage_employee}">Quản lý nhân viên</h1>
 
 <!--  &lt;!&ndash; Tìm kiếm nhân viên &ndash;&gt;-->
 <!--  <form th:action="@{/employees/search}" method="get">-->
@@ -83,15 +83,15 @@
     <thead>
     <tr>
       <th>ID</th>
-      <th>Tên nhân viên</th>
-      <th>Giới tính</th>
-      <th>Ngày sinh</th>
-      <th>Cấp độ</th>
+      <th th:text="#{label.full_name}">Tên nhân viên</th>
+      <th th:text="#{label.gender}">Giới tính</th>
+      <th th:text="#{label.birthday}">Ngày sinh</th>
+      <th th:text="#{label.level}">Cấp độ</th>
       <th>Email</th>
-      <th>SĐT</th>
-      <th>Phòng ban</th>
-      <th>Ghi chú</th>
-      <th>Tác vụ</th>
+      <th th:text="#{label.phone_number}">SĐT</th>
+      <th th:text="#{label.department}">Phòng ban</th>
+      <th th:text="#{label.notes}">Ghi chú</th>
+      <th th:text="#{label.action}">Tác vụ</th>
     </tr>
     </thead>
     <tbody>
@@ -108,16 +108,16 @@
       <td style="text-align: center;"> <!-- Căn giữa các button -->
         <!-- Button xem chi tiết -->
         <form th:action="@{/admin/employees/{id}(id=${employee.id})}" method="get" style="display:inline;">
-          <button type="submit">Xem chi tiết</button>
+          <button type="submit" th:text="#{button.view_detail}">Xem chi tiết</button>
         </form> |
         <!-- Button sửa thông tin -->
         <form th:action="@{/admin/employees/edit/{id}(id=${employee.id})}" method="get" style="display:inline;">
-          <button type="submit">Sửa</button>
+          <button type="submit" th:text="#{button.update}">Sửa</button>
         </form> |
         <!-- Button xóa nhân viên -->
         <form th:action="@{/admin/employees/delete/{id}(id=${employee.id})}" method="post" style="display:inline;">
           <input type="hidden" name="_method" value="delete">
-          <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa nhân viên này?')">Xóa</button>
+          <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa nhân viên này?')" th:text="#{button.delete}">Xóa</button>
         </form>
       </td>
     </tr>
@@ -126,7 +126,7 @@
 
   <!-- Nút Tạo mới -->
   <div class="create-button-container">
-    <a href="/admin/employees/new" class="create-button">Tạo mới</a>
+    <a href="/admin/employees/new" class="create-button" th:text="#{button.create}">Tạo mới</a>
   </div>
 </div>
 

@@ -11,17 +11,29 @@
     <div class="header-container">
         <div class="logo">
             <img src="@{static/images/logo.png}" alt="Logo">
-            <span class="company-name">ABC Group</span>
+            <span class="company-name" th:text="#{header.logo}">ABC Group</span>
         </div>
         <nav class="navigation">
             <ul>
-                <li><a href="#">What we do</a></li>
-                <li><a href="#">Who we are</a></li>
-                <li><a href="#">Industries</a></li>
+                <li><a href="#" th:text="#{header.nav.whatWeDo}">What we do</a></li>
+                <li><a href="#" th:text="#{header.nav.whoWeAre}">Who we are</a></li>
+                <li><a href="#" th:text="#{header.nav.industries}">Industries</a></li>
             </ul>
         </nav>
         <div class="connect-button">
-            <a href="#">LET'S CONNECT</a>
+            <a href="#" th:text="#{header.connectButton}">LET'S CONNECT</a>
+        </div>
+
+        <!-- Language Selector -->
+        <div class="language-selector">
+            <form action="#" method="get">
+                <select name="lang" onchange="this.form.submit()">
+                    <option th:value="en" th:text="#{lang.english}"
+                            th:selected="${#locale.language == 'en'}">English</option>
+                    <option th:value="vi" th:text="#{lang.vietnamese}"
+                            th:selected="${#locale.language == 'vi'}">Tiếng Việt</option>
+                </select>
+            </form>
         </div>
     </div>
 </header>

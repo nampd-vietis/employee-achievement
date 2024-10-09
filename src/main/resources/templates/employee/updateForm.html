@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cập nhật thông tin nhân viên</title>
+  <title th:text="#{title.update_employee}">Cập nhật thông tin nhân viên</title>
   <link rel="stylesheet" th:href="@{/css/header.css}">
   <link rel="stylesheet" th:href="@{/css/footer.css}">
   <link rel="stylesheet" th:href="@{/css/navbar.css}">
@@ -61,12 +61,12 @@
 
 <!-- Main content -->
 <div class="container">
-  <h1>Cập nhật thông tin nhân viên</h1>
+  <h1 th:text="#{title.update_employee}">Cập nhật thông tin nhân viên</h1>
 
   <form th:action="@{/admin/employees/update/{id}(id=${employee.id})}" th:object="${employee}" method="post" enctype="multipart/form-data">
     <!-- Họ và tên -->
     <div class="form-group">
-      <label for="fullName">Họ và tên</label>
+      <label for="fullName" th:text="#{label.full_name}">Họ và tên</label>
       <input type="text" id="fullName" th:field="*{fullName}" placeholder="Nhập họ và tên" required />
     </div>
 
@@ -83,13 +83,13 @@
 
     <!-- Ngày sinh -->
     <div class="form-group">
-      <label for="birthday">Ngày sinh</label>
+      <label for="birthday" th:text="#{label.birthday}">Ngày sinh</label>
       <input type="date" id="birthday" name="birthday" th:value="*{birthday}" required />
     </div>
 
     <!-- Chức vụ -->
     <div class="form-group">
-      <label for="role">Chức vụ</label>
+      <label for="role" th:text="#{label.role}">Chức vụ</label>
       <select id="role" th:field="*{role}">
         <option value="ADMIN">Admin</option>
         <option value="USER">Nhân viên</option>
@@ -98,13 +98,13 @@
 
     <!-- Cấp độ -->
     <div class="form-group">
-      <label for="level">Cấp độ</label>
+      <label for="level" th:text="#{label.level}">Cấp độ</label>
       <input type="number" id="level" th:field="*{level}" placeholder="Nhập cấp độ" required />
     </div>
 
     <!-- Lương -->
     <div class="form-group">
-      <label for="salary">Lương</label>
+      <label for="salary" th:text="#{label.salary}">Lương</label>
       <input type="number" id="salary" th:field="*{salary}" step="1" placeholder="Nhập mức lương" required />
     </div>
 
@@ -116,19 +116,19 @@
 
     <!-- Password -->
     <div class="form-group">
-      <label for="password">Password</label>
+      <label for="password" th:text="#{label.password}">Password</label>
       <input type="password" id="password" th:field="*{password}" placeholder="Nhập password" required />
     </div>
 
     <!-- Số điện thoại -->
     <div class="form-group">
-      <label for="phoneNumber">Số điện thoại</label>
+      <label for="phoneNumber" th:text="#{label.phone_number}">Số điện thoại</label>
       <input type="text" id="phoneNumber" th:field="*{phoneNumber}" placeholder="Nhập số điện thoại" required />
     </div>
 
     <!-- Phòng ban -->
     <div class="form-group">
-      <label for="departmentName">Phòng ban</label>
+      <label for="departmentName" th:text="#{label.department}">Phòng ban</label>
       <select id="departmentName" th:field="*{departmentName}">
         <option th:each="department : ${departments}" th:value="${department.departmentName}" th:text="${department.departmentName}"></option>
       </select>
@@ -136,13 +136,13 @@
 
     <!-- Ghi chú -->
     <div class="form-group">
-      <label for="notes">Ghi chú</label>
+      <label for="notes" th:text="#{label.notes}">Ghi chú</label>
       <textarea id="notes" th:field="*{notes}" rows="3"></textarea>
     </div>
 
     <!-- Ảnh nhân viên -->
     <div class="form-group">
-      <label for="photo">Ảnh</label>
+      <label for="photo" th:text="#{label.photo}">Ảnh</label>
       <img id="imagePreview"
            th:src="@{/admin/employees/files/{filename}(filename=${employee.photo})}"
            alt="Ảnh nhân viên"
@@ -153,12 +153,12 @@
 
     <!-- Nút Submit -->
     <div class="form-actions">
-      <button type="submit">Xác nhận</button>
+      <button type="submit" th:text="#{button.submit}">Xác nhận</button>
     </div>
 
     <!-- Nút hủy -->
     <div class="back-button">
-      <a th:href="@{/admin/employees}" class="button">Hủy</a>
+      <a th:href="@{/admin/employees}" class="button" th:text="#{button.cancel}">Hủy</a>
     </div>
   </form>
 

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Thêm thành tích/kỷ luật</title>
+    <title th:text="#{title.create_achievement}">Thêm thành tích/kỷ luật</title>
     <link rel="stylesheet" th:href="@{/css/list.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
@@ -49,10 +49,10 @@
 <!-- Navbar -->
 <nav th:replace="fragments/navbar :: navbar"></nav>
 
-<h1>Thêm thành tích/kỷ luật mới</h1>
+<h1 th:text="#{title.create_achievement}">Thêm thành tích/kỷ luật mới</h1>
 
 <form class="form-group" th:action="@{/admin/achievements}" th:object="${achievement}" method="post">
-    <label for="employee">Nhân viên:</label>
+    <label for="employee" th:text="#{label.employee}">Nhân viên:</label>
     <select id="employee" th:field="*{employee.id}">
         <option th:each="employee : ${employees}"
                 th:value="${employee.id}"
@@ -60,20 +60,20 @@
         </option>
     </select><br><br>
 
-    <label for="type">Loại:</label>
+    <label for="type" th:text="#{label.type}">Loại:</label>
     <select id="type" th:field="*{type}">
-        <option value="1">Thành tích</option>
-        <option value="0">Kỷ luật</option>
+        <option value="1" th:text="#{label.achievement}">Thành tích</option>
+        <option value="0" th:text="#{label.discipline}">Kỷ luật</option>
     </select><br><br>
 
-    <label for="reason">Lý do:</label>
+    <label for="reason" th:text="#{label.reason}">Lý do:</label>
     <textarea id="reason" th:field="*{reason}" rows="3" cols="40"></textarea><br><br>
 
-    <label for="dateRecorded">Ngày ghi nhận:</label>
+    <label for="dateRecorded" th:text="#{label.date_recorded}">Ngày ghi nhận:</label>
     <input type="date" id="dateRecorded" th:field="*{dateRecorded}"><br><br>
 
-    <button type="submit">Xác nhận</button>
-    <a th:href="@{/admin/achievements}" class="cancel-button">Hủy bỏ</a>
+    <button type="submit" th:text="#{button.submit}">Xác nhận</button>
+    <a th:href="@{/admin/achievements}" class="cancel-button" th:text="#{button.cancel}">Hủy bỏ</a>
 </form>
 
 <!-- Footer -->

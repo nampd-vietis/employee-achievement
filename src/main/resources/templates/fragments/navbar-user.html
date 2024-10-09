@@ -6,8 +6,8 @@
 <body>
 <nav th:fragment="navbar-user" class="navbar">
   <ul>
-    <li><a th:href="@{user/home}">Trang chủ</a></li>
-    <li><a th:href="@{/logout}" methods="post">Đăng xuất</a></li>
+    <li><a th:href="@{user/home}" th:text="#{navbar.home}">Trang chủ</a></li>
+    <li><a th:href="@{/logout}" methods="post" th:text="#{navbar.logout}">Đăng xuất</a></li>
   </ul>
 </nav>
 </body>

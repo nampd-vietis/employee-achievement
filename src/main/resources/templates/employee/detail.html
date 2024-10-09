@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chi tiết nhân viên</title>
+  <title th:text="#{title.employee_detail}">Chi tiết nhân viên</title>
   <link rel="stylesheet" th:href="@{/css/header.css}">
   <link rel="stylesheet" th:href="@{/css/footer.css}">
   <link rel="stylesheet" th:href="@{/css/navbar.css}">
@@ -56,21 +56,21 @@
   <div class="info">
     <h1 th:text="${employee.fullName}"></h1>
     <p><strong>ID:</strong> <span th:text="${employee.id}"></span></p>
-    <p><strong>Giới tính:</strong> <span th:text="${employee.getGenderDisplayName()}"></span></p>
-    <p><strong>Ngày sinh:</strong> <span th:text="${employee.birthday}"></span></p>
-    <p><strong>Chức vụ:</strong> <span th:text="${employee.role}"></span></p>
-    <p><strong>Cấp độ:</strong> <span th:text="${employee.level}"></span></p>
-    <p><strong>Lương:</strong> <span th:text="${employee.salary}"></span></p>
+    <p><strong th:text="#{label.gender}">Giới tính:</strong> <span th:text="${employee.getGenderDisplayName()}"></span></p>
+    <p><strong th:text="#{label.birthday}">Ngày sinh:</strong> <span th:text="${employee.birthday}"></span></p>
+    <p><strong th:text="#{label.role}">Chức vụ:</strong> <span th:text="${employee.role}"></span></p>
+    <p><strong th:text="#{label.level}">Cấp độ:</strong> <span th:text="${employee.level}"></span></p>
+    <p><strong th:text="#{label.salary}">Lương:</strong> <span th:text="${employee.salary}"></span></p>
     <p><strong>Email:</strong> <span th:text="${employee.email}"></span></p>
-    <p><strong>SĐT:</strong> <span th:text="${employee.phoneNumber}"></span></p>
-    <p><strong>Phòng ban:</strong> <span th:text="${employee.departmentName}"></span></p>
-    <p><strong>Ghi chú:</strong> <span th:text="${employee.notes}"></span></p>
+    <p><strong th:text="#{label.phone_number}">SĐT:</strong> <span th:text="${employee.phoneNumber}"></span></p>
+    <p><strong th:text="#{label.department}">Phòng ban:</strong> <span th:text="${employee.departmentName}"></span></p>
+    <p><strong th:text="#{label.notes}">Ghi chú:</strong> <span th:text="${employee.notes}"></span></p>
   </div>
 </div>
 
 <!-- Nút trở về danh sách -->
 <div class="back-button">
-  <a th:href="@{/admin/employees}" class="button">Danh sách nhân viên</a>
+  <a th:href="@{/admin/employees}" class="button" th:text="#{button.back_emplist}">Danh sách nhân viên</a>
 </div>
 
 <!-- Footer -->

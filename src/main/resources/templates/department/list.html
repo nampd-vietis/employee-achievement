@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý phòng ban</title>
+    <title th:text="#{title.department_management}">Quản lý phòng ban</title>
     <link rel="stylesheet" th:href="@{/css/list.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
@@ -19,15 +19,15 @@
 
 <!-- Main content -->
 <div class="container">
-    <h1>Quản lý phòng ban</h1>
+    <h1 th:text="#{title.department_management}">Quản lý phòng ban</h1>
 
     <!-- Danh sách phòng ban -->
     <table class="common-table">
         <thead>
         <tr>
-            <th>Mã phòng ban</th>
-            <th>Tên phòng ban</th>
-            <th>Tác vụ</th>
+            <th th:text="#{label.department_id}">Mã phòng ban</th>
+            <th th:text="#{label.department_name}">Tên phòng ban</th>
+            <th th:text="#{label.action}">Tác vụ</th>
         </tr>
         </thead>
         <tbody>
@@ -36,14 +36,14 @@
             <td th:text="${department.departmentName}"></td>
             <td style="text-align: center;"> <!-- Căn giữa các button -->
                 <form th:action="@{/admin/departments/{id}/employees(id=${department.id})}" method="get" style="display:inline;">
-                    <button type="submit">Xem dsnv</button>
+                    <button type="submit" th:text="#{button.view_employees}">Xem dsnv</button>
                 </form> |
                 <form th:action="@{/admin/departments/edit/{id}(id=${department.id})}" method="get" style="display:inline;">
-                    <button type="submit">Sửa</button>
+                    <button type="submit" th:text="#{button.update}">Sửa</button>
                 </form> |
                 <form th:action="@{/admin/departments/delete/{id}(id=${department.id})}" method="post" style="display:inline;">
                     <input type="hidden" name="_method" value="delete">
-                    <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa phòng ban này?')">Xóa</button>
+                    <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa phòng ban này?')" th:text="#{button.delete}">Xóa</button>
                 </form>
             </td>
         </tr>
@@ -52,7 +52,7 @@
 
     <!-- Nút Tạo mới -->
     <div class="create-button-container">
-        <a href="/admin/departments/new" class="create-button">Tạo mới</a>
+        <a href="/admin/departments/new" class="create-button" th:text="#{button.create}">Tạo mới</a>
     </div>
 </div>
 

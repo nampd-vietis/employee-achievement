@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Trang chủ - User</title>
+    <title th:text="#{home.title}">Trang chủ</title>
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/navbar.css}">
@@ -18,7 +18,7 @@
 
 <!-- Main content -->
 <div class="container">
-    <h1>Top 10 nhân viên có thành tích cao nhất</h1>
+    <h1 th:text="#{home.topEmployees}">Top 10 nhân viên có thành tích cao nhất</h1>
 
     <div class="employee-grid">
         <div th:each="topEmployee, iterStat : ${topEmployees}" class="employee-card">
@@ -31,7 +31,7 @@
                 <p th:text="${topEmployee.employee.department.departmentName}"></p>
             </div>
             <div class="points-info">
-                <p>Điểm thưởng: <span th:text="${topEmployee.rewardPoints}"></span></p>
+                <p th:text="#{home.rewardPoints} + ': ' + ${topEmployee.rewardPoints}">Điểm thưởng: <span></span></p>
             </div>
         </div>
     </div>
