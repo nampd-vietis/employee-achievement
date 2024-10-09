@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/departments")
+@RequestMapping("admin/departments")
 public class DepartmentController {
     private final DepartmentService departmentService;
 
@@ -51,7 +51,7 @@ public class DepartmentController {
     public String createDepartment(@ModelAttribute("department") DepartmentDTO departmentDto, Model model) {
         try {
             departmentService.createDepartment(departmentDto);
-            return "redirect:/departments";
+            return "redirect:/admin/departments";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Phòng ban đã tồn tại");
             return "department/addForm";
@@ -78,7 +78,7 @@ public class DepartmentController {
                                    Model model) {
         try {
             departmentService.updateDepartment(id, departmentDTO);
-            return "redirect:/departments";
+            return "redirect:/admin/departments";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Phòng ban không tồn tại");
             return "department/updateForm";
@@ -90,7 +90,7 @@ public class DepartmentController {
     public String deleteDepartment(@PathVariable Long id, Model model) {
         try {
             departmentService.deleteDepartment(id);
-            return "redirect:/departments";
+            return "redirect:/admin/departments";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Phòng ban không tồn tại.");
             return "error"; // Trả về view lỗi

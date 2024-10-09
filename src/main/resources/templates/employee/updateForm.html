@@ -63,7 +63,7 @@
 <div class="container">
   <h1>Cập nhật thông tin nhân viên</h1>
 
-  <form th:action="@{/employees/update/{id}(id=${employee.id})}" th:object="${employee}" method="post" enctype="multipart/form-data">
+  <form th:action="@{/admin/employees/update/{id}(id=${employee.id})}" th:object="${employee}" method="post" enctype="multipart/form-data">
     <!-- Họ và tên -->
     <div class="form-group">
       <label for="fullName">Họ và tên</label>
@@ -144,7 +144,7 @@
     <div class="form-group">
       <label for="photo">Ảnh</label>
       <img id="imagePreview"
-           th:src="@{/employees/files/{filename}(filename=${employee.photo})}"
+           th:src="@{/admin/employees/files/{filename}(filename=${employee.photo})}"
            alt="Ảnh nhân viên"
            class="img-preview"/>
       <input type="file" id="photo" name="imgFile" accept="image/*" onchange="previewImage(event)"/>
@@ -158,7 +158,7 @@
 
     <!-- Nút hủy -->
     <div class="back-button">
-      <a th:href="@{/employees}" class="button">Hủy</a>
+      <a th:href="@{/admin/employees}" class="button">Hủy</a>
     </div>
   </form>
 

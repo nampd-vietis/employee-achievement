@@ -25,12 +25,13 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute EmployeeLoginDTO employeeLoginDTO, Model model, HttpSession session) {
+    public String login(@ModelAttribute EmployeeLoginDTO employeeLoginDTO,
+                        Model model,
+                        HttpSession session) {
         try {
             Employee employee = loginService.login(employeeLoginDTO.getEmail(), employeeLoginDTO.getPassword());
 
             session.setAttribute("loggedInEmployee", employee);
-            session.setAttribute("employeeRole", employee.getRole());
 
             if (employee.getRole() == Employee.Role.ADMIN) {
                 return "redirect:/admin/home";
@@ -40,6 +41,8 @@ public class LoginController {
         } catch (RuntimeException e) {
             model.addAttribute("error", "Email hoặc mật khẩu không chính xác");
             return "login";
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -47,16 +50,5 @@ public class LoginController {
     public String logout(HttpSession session) {
         session.invalidate(); // Xóa session
         return "redirect:/login";
-    }
-
-    @GetMapping("/admin/home")
-    public String showAdminHome(HttpSession session, Model model) {
-        // Kiểm tra xem user có đăng nhập hay chưa và có phải admin hay không
-        if (session.getAttribute("employeeRole") == null || !session.getAttribute("employeeRole").equals(Employee.Role.ADMIN)) {
-            return "redirect:/login"; // Chuyển hướng về trang login nếu không phải admin
-        }
-
-        model.addAttribute("adminName", session.getAttribute("loggedInEmployee"));
-        return "admin-home"; // Trả về trang admin homepage
     }
 }

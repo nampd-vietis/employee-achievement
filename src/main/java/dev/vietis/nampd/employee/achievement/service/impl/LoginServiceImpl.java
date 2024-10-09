@@ -17,8 +17,8 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public Employee login(String email, String password) {
-        Optional<Employee> employee = employeeRepository.findByEmailAndPassword(email, password);
-        if (employee.isEmpty()) {
+        Optional<Employee> employee = employeeRepository.findByEmail(email);
+        if (employee.isEmpty() || !employee.get().getPassword().equals(password)) {
             throw new RuntimeException("Thông tin đăng nhập không hợp lệ");
         }
         return employee.get();

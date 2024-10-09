@@ -63,7 +63,7 @@
 <div class="container">
     <h1>Thêm nhân viên mới</h1>
 
-    <form th:action="@{/employees}" th:object="${employee}" method="post" enctype="multipart/form-data">
+    <form th:action="@{/admin/employees}" th:object="${employee}" method="post" enctype="multipart/form-data">
         <!-- Họ và tên -->
         <div class="form-group">
             <label for="fullName">Họ và tên</label>
@@ -156,7 +156,7 @@
 
         <!-- Nút hủy -->
         <div class="back-button">
-            <a th:href="@{/employees}" class="button">Hủy</a>
+            <a th:href="@{/admin/employees}" class="button">Hủy</a>
         </div>
     </form>
 

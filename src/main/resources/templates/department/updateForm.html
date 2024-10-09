@@ -21,14 +21,14 @@
 <div class="container">
   <h1>Sửa phòng ban</h1>
 
-  <form action="#" th:action="@{/departments/update/{id}(id=${department.id})}" th:object="${department}" method="post">
+  <form action="#" th:action="@{/admin/departments/update/{id}(id=${department.id})}" th:object="${department}" method="post">
     <div class="form-group">
       <label for="departmentName">Tên phòng ban:</label>
       <input type="text" id="departmentName" th:field="*{departmentName}" required>
     </div>
 
     <button type="submit">Cập nhật</button>
-    <a th:href="@{/departments}" class="cancel-button">Hủy bỏ</a>
+    <a th:href="@{/admin/departments}" class="cancel-button">Hủy bỏ</a>
   </form>
 </div>
 

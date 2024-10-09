@@ -107,15 +107,15 @@
       <td th:text="${employee.notes}"></td>
       <td style="text-align: center;"> <!-- Căn giữa các button -->
         <!-- Button xem chi tiết -->
-        <form th:action="@{/employees/{id}(id=${employee.id})}" method="get" style="display:inline;">
+        <form th:action="@{/admin/employees/{id}(id=${employee.id})}" method="get" style="display:inline;">
           <button type="submit">Xem chi tiết</button>
         </form> |
         <!-- Button sửa thông tin -->
-        <form th:action="@{/employees/edit/{id}(id=${employee.id})}" method="get" style="display:inline;">
+        <form th:action="@{/admin/employees/edit/{id}(id=${employee.id})}" method="get" style="display:inline;">
           <button type="submit">Sửa</button>
         </form> |
         <!-- Button xóa nhân viên -->
-        <form th:action="@{/employees/delete/{id}(id=${employee.id})}" method="post" style="display:inline;">
+        <form th:action="@{/admin/employees/delete/{id}(id=${employee.id})}" method="post" style="display:inline;">
           <input type="hidden" name="_method" value="delete">
           <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa nhân viên này?')">Xóa</button>
         </form>
@@ -126,7 +126,7 @@
 
   <!-- Nút Tạo mới -->
   <div class="create-button-container">
-    <a href="/employees/new" class="create-button">Tạo mới</a>
+    <a href="/admin/employees/new" class="create-button">Tạo mới</a>
   </div>
 </div>
 

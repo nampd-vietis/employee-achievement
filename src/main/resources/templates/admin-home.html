@@ -25,7 +25,7 @@
             <div class="employee-index">
                 <span th:text="${iterStat.index + 1}">1</span> <!-- Hiển thị số thứ tự -->
             </div>
-            <img th:src="@{/employees/files/{filename}(filename=${topEmployee.employee.photo})}" alt="employee photo" class="employee-photo">
+            <img th:src="@{/files/{filename}(filename=${topEmployee.employee.photo})}" alt="employee photo" class="employee-photo">
             <div class="employee-info">
                 <h2 th:text="${topEmployee.employee.fullName}"></h2>
                 <p th:text="${topEmployee.employee.department.departmentName}"></p>

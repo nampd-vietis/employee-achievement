@@ -35,13 +35,13 @@
             <td th:text="${department.id}"></td>
             <td th:text="${department.departmentName}"></td>
             <td style="text-align: center;"> <!-- Căn giữa các button -->
-                <form th:action="@{/departments/{id}/employees(id=${department.id})}" method="get" style="display:inline;">
+                <form th:action="@{/admin/departments/{id}/employees(id=${department.id})}" method="get" style="display:inline;">
                     <button type="submit">Xem dsnv</button>
                 </form> |
-                <form th:action="@{/departments/edit/{id}(id=${department.id})}" method="get" style="display:inline;">
+                <form th:action="@{/admin/departments/edit/{id}(id=${department.id})}" method="get" style="display:inline;">
                     <button type="submit">Sửa</button>
                 </form> |
-                <form th:action="@{/departments/delete/{id}(id=${department.id})}" method="post" style="display:inline;">
+                <form th:action="@{/admin/departments/delete/{id}(id=${department.id})}" method="post" style="display:inline;">
                     <input type="hidden" name="_method" value="delete">
                     <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa phòng ban này?')">Xóa</button>
                 </form>
@@ -52,7 +52,7 @@
 
     <!-- Nút Tạo mới -->
     <div class="create-button-container">
-        <a href="/departments/new" class="create-button">Tạo mới</a>
+        <a href="/admin/departments/new" class="create-button">Tạo mới</a>
     </div>
 </div>
 

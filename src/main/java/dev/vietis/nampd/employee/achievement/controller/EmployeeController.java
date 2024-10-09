@@ -7,21 +7,16 @@ import dev.vietis.nampd.employee.achievement.service.EmployeeService;
 import dev.vietis.nampd.employee.achievement.service.FileStorageService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("/employees")
+@RequestMapping("admin/employees")
 public class EmployeeController {
 
     private final EmployeeService employeeService;
@@ -80,7 +75,7 @@ public class EmployeeController {
 
             // Tạo nhân viên mới
             employeeService.createEmployee(employeeDTO);
-            return "redirect:/employees";
+            return "redirect:/admin/employees";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Lỗi khi tạo nhân viên");
             return "employee/addForm";
@@ -113,7 +108,7 @@ public class EmployeeController {
                                  Model model) {
         try {
             employeeService.updateEmployee(id, employeeDTO, imgFile);
-            return "redirect:/employees";
+            return "redirect:/admin/employees";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Nhân viên không tồn tại");
             return "employee/updateForm";
@@ -128,21 +123,21 @@ public class EmployeeController {
     public String deleteEmployee(@PathVariable Long id, Model model) {
         try {
             employeeService.deleteEmployee(id);
-            return "redirect:/employees";
+            return "redirect:/admin/employees";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Nhân viên không tồn tại.");
             return "error"; // Trả về view lỗi
         }
     }
 
-    @GetMapping("/files/{filename}")
-    public ResponseEntity<Resource> getFile(@PathVariable String filename) throws MalformedURLException {
-
-        Resource file = fileStorageService.load(filename);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +"anh" + "\"")
-                .body(file);
-    }
+//    @GetMapping("/files/{filename}")
+//    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
+//
+//        Resource file = fileStorageService.load(filename);
+//        return ResponseEntity.ok()
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +"anh" + "\"")
+//                .body(file);
+//    }
 
 //    @GetMapping("/search")
 

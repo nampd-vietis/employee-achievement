@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/achievements")
+@RequestMapping("admin/achievements")
 public class AchievementController {
 
     private final AchievementService achievementService;
@@ -53,7 +53,7 @@ public class AchievementController {
     @PostMapping
     public String createAchievement(@ModelAttribute Achievement achievement) {
         achievementService.createAchievement(achievement);
-        return "redirect:/achievements";
+        return "redirect:/admin/achievements";
     }
 
     // Hiển thị form chỉnh sửa
@@ -80,7 +80,7 @@ public class AchievementController {
                                    Model model) {
         try {
             achievementService.updateAchievement(id, achievement);
-            return "redirect:/achievements";
+            return "redirect:/admin/achievements";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Achievement không tồn tại");
             return "achievement/updateForm";
@@ -91,7 +91,7 @@ public class AchievementController {
     @PostMapping("/delete/{id}")
     public String deleteAchievement(@PathVariable Long id) {
         achievementService.deleteAchievement(id);
-        return "redirect:/achievements";
+        return "redirect:/admin/achievements";
     }
 
     //tổng hợp nhân viên

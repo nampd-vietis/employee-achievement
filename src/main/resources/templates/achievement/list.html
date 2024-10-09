@@ -43,10 +43,10 @@
             <td th:text="${achievement.reason}"></td>
             <td th:text="${achievement.dateRecorded}"></td>
             <td style="text-align: center;"> <!-- Căn giữa các button -->
-                <form th:action="@{/achievements/edit/{id}(id=${achievement.id})}" method="get" style="display:inline;">
+                <form th:action="@{/admin/achievements/edit/{id}(id=${achievement.id})}" method="get" style="display:inline;">
                     <button type="submit">Sửa</button>
                 </form> |
-                <form th:action="@{/achievements/delete/{id}(id=${achievement.id})}" method="post" style="display:inline;">
+                <form th:action="@{/admin/achievements/delete/{id}(id=${achievement.id})}" method="post" style="display:inline;">
                     <input type="hidden" name="_method" value="delete">
                     <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa thành tích/kỷ luật này?')">Xóa</button>
                 </form>
@@ -57,7 +57,7 @@
 
     <!-- Nút Tạo mới -->
     <div class="create-button-container">
-        <a href="/achievements/new" class="create-button">Tạo mới</a>
+        <a href="/admin/achievements/new" class="create-button">Tạo mới</a>
     </div>
 </div>
 

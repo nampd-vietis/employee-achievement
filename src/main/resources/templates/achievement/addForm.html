@@ -51,7 +51,7 @@
 
 <h1>Thêm thành tích/kỷ luật mới</h1>
 
-<form class="form-group" th:action="@{/achievements}" th:object="${achievement}" method="post">
+<form class="form-group" th:action="@{/admin/achievements}" th:object="${achievement}" method="post">
     <label for="employee">Nhân viên:</label>
     <select id="employee" th:field="*{employee.id}">
         <option th:each="employee : ${employees}"
@@ -73,7 +73,7 @@
     <input type="date" id="dateRecorded" th:field="*{dateRecorded}"><br><br>
 
     <button type="submit">Xác nhận</button>
-    <a th:href="@{/achievements}" class="cancel-button">Hủy bỏ</a>
+    <a th:href="@{/admin/achievements}" class="cancel-button">Hủy bỏ</a>
 </form>
 
 <!-- Footer -->
