@@ -55,12 +55,12 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public EmployeeDTO getEmployeeByEmail(String email) {
-        Employee employee = employeeRepository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("Employee not found"));
-        return employeeMapper.toEmployeeDto(employee);
-    }
+//    @Override
+//    public EmployeeDTO getEmployeeByEmail(String email) {
+//        Employee employee = employeeRepository.findByEmail(email)
+//                .orElseThrow(() -> new NoSuchElementException("Employee not found"));
+//        return employeeMapper.toEmployeeDto(employee);
+//    }
 
     @Override
     public EmployeeDTO getEmployeeById(Long id) {

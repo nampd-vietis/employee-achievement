@@ -3,7 +3,6 @@ package dev.vietis.nampd.employee.achievement.service.impl;
 import dev.vietis.nampd.employee.achievement.mapper.DepartmentMapper;
 import dev.vietis.nampd.employee.achievement.model.dto.DepartmentDTO;
 import dev.vietis.nampd.employee.achievement.model.entity.Department;
-import dev.vietis.nampd.employee.achievement.model.entity.Employee;
 import dev.vietis.nampd.employee.achievement.repository.DepartmentRepository;
 import dev.vietis.nampd.employee.achievement.service.DepartmentService;
 import org.springframework.data.domain.Sort;
@@ -51,12 +50,12 @@ public class DepartmentServiceImpl implements DepartmentService {
         return departmentMapper.toDepartmentDto(department);
     }
 
-    @Override
-    public DepartmentDTO getDepartmentByName(String name) {
-        Department department = departmentRepository.findByDepartmentName(name)
-                .orElseThrow(() -> new IllegalArgumentException("Department not found"));
-        return departmentMapper.toDepartmentDto(department);
-    }
+//    @Override
+//    public DepartmentDTO getDepartmentByName(String name) {
+//        Department department = departmentRepository.findByDepartmentName(name)
+//                .orElseThrow(() -> new IllegalArgumentException("Department not found"));
+//        return departmentMapper.toDepartmentDto(department);
+//    }
 
     @Override
     public void updateDepartment(Long departmentId, DepartmentDTO updatedDepartmentDTO) {
@@ -78,14 +77,14 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
     }
 
-    @Override
-    public List<Employee> getAllEmployeesInDepartment(Long departmentId) {
-        Optional<Department> existingDepartment = departmentRepository.findById(departmentId);
-        if (existingDepartment.isPresent()) {
-            Department department = existingDepartment.get();
-            return department.getEmployeeList();
-        } else {
-            throw new NoSuchElementException("Department not found");
-        }
-    }
+//    @Override
+//    public List<Employee> getAllEmployeesInDepartment(Long departmentId) {
+//        Optional<Department> existingDepartment = departmentRepository.findById(departmentId);
+//        if (existingDepartment.isPresent()) {
+//            Department department = existingDepartment.get();
+//            return department.getEmployeeList();
+//        } else {
+//            throw new NoSuchElementException("Department not found");
+//        }
+//    }
 }

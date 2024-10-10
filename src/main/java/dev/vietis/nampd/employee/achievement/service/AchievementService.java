@@ -11,7 +11,7 @@ public interface AchievementService {
 
     List<Achievement> getAllAchievements();
 
-    List<Achievement> getAchievementByEmployeeId(Long employeeId);
+//    List<Achievement> getAchievementByEmployeeId(Long employeeId);
     Achievement getAchievementById(Long achievementId);
 
     Achievement updateAchievement(Long achievementId, Achievement updatedAchievement);

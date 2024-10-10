@@ -28,8 +28,8 @@ class LoginServiceImplTest {
     @Test
     void testLoginSuccess() {
         // Giả lập dữ liệu
-        String email = "employee@example.com";
-        String password = "password";
+        String email = "test@gmail.com";
+        String password = "pass";
         Employee mockEmployee = new Employee();
         mockEmployee.setEmail(email);
         mockEmployee.setPassword(password);
@@ -38,12 +38,12 @@ class LoginServiceImplTest {
         when(employeeRepository.findByEmail(email)).thenReturn(Optional.of(mockEmployee));
 
         // Gọi phương thức login
-        Employee result = loginService.login(email, password);
+        Employee resultEmployee = loginService.login(email, password);
 
         // Kiểm tra kết quả trả về
-        assertNotNull(result);
-        assertEquals(email, result.getEmail());
-        assertEquals(password, result.getPassword());
+        assertNotNull(resultEmployee);
+        assertEquals(email, resultEmployee.getEmail());
+        assertEquals(password, resultEmployee.getPassword());
 
         // Kiểm tra findByEmail đã được gọi đúng với tham số email
         verify(employeeRepository, times(1)).findByEmail(email);
@@ -52,8 +52,8 @@ class LoginServiceImplTest {
     @Test
     void testLoginWithInvalidEmail() {
         // Giả lập một email không tồn tại
-        String email = "nonexistent@example.com";
-        String password = "any_password";
+        String email = "wrong@gmail.com";
+        String password = "pass";
 
         // Giả lập EmployeeRepository trả về Optional trống
         when(employeeRepository.findByEmail(email)).thenReturn(Optional.empty());
@@ -73,19 +73,19 @@ class LoginServiceImplTest {
     @Test
     void testLoginWithIncorrectPassword() {
         // Giả lập dữ liệu nhân viên
-        String email = "employee@example.com";
-        String correctPassword = "correct_password";
-        String incorrectPassword = "incorrect_password";
+        String email = "test@gmail.com";
+        String rightPass = "right_pass";
+        String wrongPass = "wrong_pass";
         Employee mockEmployee = new Employee();
         mockEmployee.setEmail(email);
-        mockEmployee.setPassword(correctPassword);
+        mockEmployee.setPassword(rightPass);
 
         // Giả lập EmployeeRepository trả về đối tượng Optional chứa Employee
         when(employeeRepository.findByEmail(email)).thenReturn(Optional.of(mockEmployee));
 
         // Kiểm tra xem RuntimeException được ném ra khi mật khẩu sai
         Exception exception = assertThrows(RuntimeException.class, () -> {
-            loginService.login(email, incorrectPassword);
+            loginService.login(email, wrongPass);
         });
 
         // Kiểm tra thông báo lỗi

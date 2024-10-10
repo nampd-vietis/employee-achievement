@@ -43,15 +43,15 @@ public class AchievementServiceImpl implements AchievementService {
         return new ArrayList<>(achievementRepository.findAll());
     }
 
-    @Override
-    public List<Achievement> getAchievementByEmployeeId(Long employeeId) {
-        Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
-
-        List<Achievement> achievements = achievementRepository.findByEmployeeId(employeeId);
-
-        return new ArrayList<>(achievements);
-    }
+//    @Override
+//    public List<Achievement> getAchievementByEmployeeId(Long employeeId) {
+//        Employee employee = employeeRepository.findById(employeeId)
+//                .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
+//
+//        List<Achievement> achievements = achievementRepository.findByEmployeeId(employeeId);
+//
+//        return new ArrayList<>(achievements);
+//    }
 
     @Override
     public Achievement getAchievementById(Long achievementId) {
