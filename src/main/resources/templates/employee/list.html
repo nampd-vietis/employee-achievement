@@ -8,42 +8,22 @@
   <link rel="stylesheet" th:href="@{/css/header.css}">
   <link rel="stylesheet" th:href="@{/css/footer.css}">
   <link rel="stylesheet" th:href="@{/css/navbar.css}">
-<!--  <style>-->
-<!--    /* Style cho các ô tìm kiếm */-->
-<!--    .search-fields {-->
-<!--      display: flex;-->
-<!--      justify-content: space-between;-->
-<!--      align-items: center;-->
-<!--      margin-bottom: 20px;-->
-<!--    }-->
+  <style>
+    /* Đặt các trường tìm kiếm trên cùng một hàng */
+    .search-fields {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
 
-<!--    .search-fields .form-group {-->
-<!--      flex-grow: 1;-->
-<!--      margin-right: 10px;-->
-<!--    }-->
+    .search-fields input {
+      width: 150px; /* Điều chỉnh kích thước input */
+      padding: 5px;
+      margin-right: 10px;
+      font-size: 12px;
+    }
+  </style>
 
-<!--    .search-fields .form-group input {-->
-<!--      width: 100%;-->
-<!--      padding: 10px;-->
-<!--      border: 1px solid #ccc;-->
-<!--      border-radius: 4px;-->
-<!--      font-size: 14px;-->
-<!--    }-->
-
-<!--    .search-fields .form-group button {-->
-<!--      padding: 10px 15px;-->
-<!--      background-color: #00d0ff;-->
-<!--      color: white;-->
-<!--      border: none;-->
-<!--      border-radius: 4px;-->
-<!--      cursor: pointer;-->
-<!--      font-size: 14px;-->
-<!--    }-->
-
-<!--    .search-fields .form-group button:hover {-->
-<!--      background-color: #00d0ff;-->
-<!--    }-->
-<!--  </style>-->
 </head>
 <body>
 
@@ -57,78 +37,96 @@
 <div class="container">
   <h1 th:text="#{title.manage_employee}">Quản lý nhân viên</h1>
 
-<!--  &lt;!&ndash; Tìm kiếm nhân viên &ndash;&gt;-->
-<!--  <form th:action="@{/employees/search}" method="get">-->
-<!--    <div class="search-fields">-->
-<!--      <div class="form-group">-->
-<!--        <input type="text" id="fullName" name="fullName" placeholder="Nhập tên nhân viên" th:value="${fullName}">-->
-<!--      </div>-->
-<!--      <div class="form-group">-->
-<!--        <input type="text" id="email" name="email" placeholder="Nhập email" th:value="${email}">-->
-<!--      </div>-->
-<!--      <div class="form-group">-->
-<!--        <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Nhập số điện thoại" th:value="${phoneNumber}">-->
-<!--      </div>-->
-<!--      <div class="form-group">-->
-<!--        <input type="text" id="departmentName" name="departmentName" placeholder="Nhập tên phòng ban" th:value="${departmentName}">-->
-<!--      </div>-->
-<!--      <div class="form-group">-->
-<!--        <button type="submit">Tìm kiếm</button>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </form>-->
+  <!-- Form tìm kiếm -->
+  <form id="searchForm" method="get">
+    <div class="search-fields">
+      <div class="form-group">
+        <input type="text" id="fullName" name="fullName" placeholder="Nhập tên nhân viên" oninput="searchEmployees()">
+      </div>
+      <div class="form-group">
+        <input type="text" id="email" name="email" placeholder="Nhập email" oninput="searchEmployees()">
+      </div>
+      <div class="form-group">
+        <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Nhập số điện thoại" oninput="searchEmployees()">
+      </div>
+      <div class="form-group">
+        <input type="text" id="departmentName" name="departmentName" placeholder="Nhập tên phòng ban" oninput="searchEmployees()">
+      </div>
+    </div>
+  </form>
 
   <!-- Danh sách nhân viên -->
-  <table class="common-table">
-    <thead>
-    <tr>
-      <th>ID</th>
-      <th th:text="#{label.full_name}">Tên nhân viên</th>
-      <th th:text="#{label.gender}">Giới tính</th>
-      <th th:text="#{label.birthday}">Ngày sinh</th>
-      <th th:text="#{label.level}">Cấp độ</th>
-      <th>Email</th>
-      <th th:text="#{label.phone_number}">SĐT</th>
-      <th th:text="#{label.department}">Phòng ban</th>
-      <th th:text="#{label.notes}">Ghi chú</th>
-      <th th:text="#{label.action}">Tác vụ</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="employee : ${employees}">
-      <td th:text="${employee.id}"></td>
-      <td th:text="${employee.fullName}"></td>
-      <td th:text="${employee.getGenderDisplayName()}"></td>
-      <td th:text="${employee.birthday}"></td>
-      <td th:text="${employee.level}"></td>
-      <td th:text="${employee.email}"></td>
-      <td th:text="${employee.phoneNumber}"></td>
-      <td th:text="${employee.departmentName}"></td>
-      <td th:text="${employee.notes}"></td>
-      <td style="text-align: center;"> <!-- Căn giữa các button -->
-        <!-- Button xem chi tiết -->
-        <form th:action="@{/admin/employees/{id}(id=${employee.id})}" method="get" style="display:inline;">
-          <button type="submit" th:text="#{button.view_detail}">Xem chi tiết</button>
-        </form> |
-        <!-- Button sửa thông tin -->
-        <form th:action="@{/admin/employees/edit/{id}(id=${employee.id})}" method="get" style="display:inline;">
-          <button type="submit" th:text="#{button.update}">Sửa</button>
-        </form> |
-        <!-- Button xóa nhân viên -->
-        <form th:action="@{/admin/employees/delete/{id}(id=${employee.id})}" method="post" style="display:inline;">
-          <input type="hidden" name="_method" value="delete">
-          <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa nhân viên này?')" th:text="#{button.delete}">Xóa</button>
-        </form>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+  <div id="employeeTable">
+    <table class="common-table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th th:text="#{label.full_name}">Tên nhân viên</th>
+        <th th:text="#{label.gender}">Giới tính</th>
+        <th th:text="#{label.birthday}">Ngày sinh</th>
+        <th th:text="#{label.level}">Cấp độ</th>
+        <th>Email</th>
+        <th th:text="#{label.phone_number}">SĐT</th>
+        <th th:text="#{label.department}">Phòng ban</th>
+        <th th:text="#{label.notes}">Ghi chú</th>
+        <th th:text="#{label.action}">Tác vụ</th>
+      </tr>
+      </thead>
+      <tbody id="employeeData">
+        <tr th:each="employee : ${employees}">
+          <td th:text="${employee.id}"></td>
+          <td th:text="${employee.fullName}"></td>
+          <td th:text="${employee.getGenderDisplayName()}"></td>
+          <td th:text="${employee.birthday}"></td>
+          <td th:text="${employee.level}"></td>
+          <td th:text="${employee.email}"></td>
+          <td th:text="${employee.phoneNumber}"></td>
+          <td th:text="${employee.departmentName}"></td>
+          <td th:text="${employee.notes}"></td>
+          <td style="text-align: center;"> <!-- Căn giữa các button -->
+            <!-- Button xem chi tiết -->
+            <form th:action="@{/admin/employees/{id}(id=${employee.id})}" method="get" style="display:inline;">
+              <button type="submit" th:text="#{button.view_detail}">Xem chi tiết</button>
+            </form> |
+            <!-- Button sửa thông tin -->
+            <form th:action="@{/admin/employees/edit/{id}(id=${employee.id})}" method="get" style="display:inline;">
+              <button type="submit" th:text="#{button.update}">Sửa</button>
+            </form> |
+            <!-- Button xóa nhân viên -->
+            <form th:action="@{/admin/employees/delete/{id}(id=${employee.id})}" method="post" style="display:inline;">
+              <input type="hidden" name="_method" value="delete">
+              <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa nhân viên này?')" th:text="#{button.delete}">Xóa</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
   <!-- Nút Tạo mới -->
   <div class="create-button-container">
     <a href="/admin/employees/new" class="create-button" th:text="#{button.create}">Tạo mới</a>
   </div>
 </div>
+
+<script>
+  function searchEmployees() {
+    const fullName = document.getElementById('fullName').value;
+    const email = document.getElementById('email').value;
+    const phoneNumber = document.getElementById('phoneNumber').value;
+    const departmentName = document.getElementById('departmentName').value;
+
+    // Gửi yêu cầu AJAX tới server
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `/admin/employees/search?fullName=${fullName}&email=${email}&phoneNumber=${phoneNumber}&departmentName=${departmentName}`, true);
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        document.getElementById('employeeData').innerHTML = xhr.responseText;
+      }
+    };
+    xhr.send();
+  }
+</script>
 
 <!-- Footer -->
 <footer th:replace="fragments/footer :: footer"></footer>

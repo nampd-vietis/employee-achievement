@@ -1,0 +1,29 @@
+<!-- searchResults.html -->
+<div th:fragment="employeeData">
+    <tr th:each="employee : ${employees}">
+        <td th:text="${employee.id}"></td>
+        <td th:text="${employee.fullName}"></td>
+        <td th:text="${employee.getGenderDisplayName()}"></td>
+        <td th:text="${employee.birthday}"></td>
+        <td th:text="${employee.level}"></td>
+        <td th:text="${employee.email}"></td>
+        <td th:text="${employee.phoneNumber}"></td>
+        <td th:text="${employee.departmentName}"></td>
+        <td th:text="${employee.notes}"></td>
+        <td style="text-align: center;"> <!-- Căn giữa các button -->
+            <!-- Button xem chi tiết -->
+            <form th:action="@{/admin/employees/{id}(id=${employee.id})}" method="get" style="display:inline;">
+                <button type="submit" th:text="#{button.view_detail}">Xem chi tiết</button>
+            </form> |
+            <!-- Button sửa thông tin -->
+            <form th:action="@{/admin/employees/edit/{id}(id=${employee.id})}" method="get" style="display:inline;">
+                <button type="submit" th:text="#{button.update}">Sửa</button>
+            </form> |
+            <!-- Button xóa nhân viên -->
+            <form th:action="@{/admin/employees/delete/{id}(id=${employee.id})}" method="post" style="display:inline;">
+                <input type="hidden" name="_method" value="delete">
+                <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa nhân viên này?')" th:text="#{button.delete}">Xóa</button>
+            </form>
+        </td>
+    </tr>
+</div>

@@ -130,15 +130,14 @@ public class EmployeeController {
         }
     }
 
-//    @GetMapping("/files/{filename}")
-//    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
-//
-//        Resource file = fileStorageService.load(filename);
-//        return ResponseEntity.ok()
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +"anh" + "\"")
-//                .body(file);
-//    }
-
-//    @GetMapping("/search")
-
+    @GetMapping("/search")
+    public String searchEmployees(@RequestParam(required = false) String fullName,
+                                  @RequestParam(required = false) String email,
+                                  @RequestParam(required = false) String phoneNumber,
+                                  @RequestParam(required = false) String departmentName,
+                                  Model model) {
+        List<EmployeeDTO> employees = employeeService.searchEmployees(fullName, email, phoneNumber, departmentName);
+        model.addAttribute("employees", employees);
+        return "employee/searchResults :: employeeData"; // Trả về fragment HTML
+    }
 }

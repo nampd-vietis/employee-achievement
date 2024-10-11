@@ -108,4 +108,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         employeeRepository.deleteById(employeeId);
     }
+
+    @Override
+    public List<EmployeeDTO> searchEmployees(String fullName, String email, String phoneNumber, String departmentName) {
+        List<Employee> employees = employeeRepository.searchEmployees(fullName, email, phoneNumber, departmentName);
+        return employees.stream()
+                .map(employeeMapper::toEmployeeDto)
+                .collect(Collectors.toList());
+    }
 }

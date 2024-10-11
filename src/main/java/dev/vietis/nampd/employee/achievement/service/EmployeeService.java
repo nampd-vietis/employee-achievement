@@ -12,4 +12,5 @@ public interface EmployeeService {
     void updateEmployee(Long id, EmployeeDTO updatedEmployeeDTO, MultipartFile imgFile);
     void deleteEmployee(Long id);
     EmployeeDTO getEmployeeById(Long id);
+    List<EmployeeDTO> searchEmployees(String fullName, String email, String phoneNumber, String departmentName);
 }

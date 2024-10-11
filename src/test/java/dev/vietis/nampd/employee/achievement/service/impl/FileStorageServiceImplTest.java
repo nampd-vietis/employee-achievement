@@ -1,10 +1,11 @@
 package dev.vietis.nampd.employee.achievement.service.impl;
 
-import dev.vietis.nampd.employee.achievement.service.FileStorageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.mock.web.MockMultipartFile;
@@ -15,10 +16,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class FileStorageServiceImplTest {
     @Mock
     private MultipartFile file;
@@ -29,22 +30,17 @@ class FileStorageServiceImplTest {
     private Path root;
 
     @BeforeEach
-    public void setUp() {
-        try {
-            // Tạo thư mục tạm thời cho test
-            root = Files.createTempDirectory("test-uploads");
-            // Thiết lập đường dẫn gốc cho FileStorageServiceImpl
-            Files.createDirectories(root.resolve("uploads/images"));
-            fileStorageServiceImpl = new FileStorageServiceImpl(); // Khởi tạo lại sau khi thiết lập đường dẫn
-        } catch (IOException e) {
-            fail("Could not create temp directory for tests");
-        }
+    public void setUp() throws IOException {
+        // Tạo thư mục tạm thời cho test
+        root = Paths.get("./uploads/images");
+        Files.createDirectories(root); // Đảm bảo thư mục tồn tại
+        fileStorageServiceImpl.init(); // Khởi tạo dịch vụ lưu trữ tệp
     }
 
     @Test
     public void testSaveSuccess() throws Exception {
         // Tạo một tệp mẫu
-        MockMultipartFile mockFile = new MockMultipartFile("file", "test.jpg", "text/plain", "Test content".getBytes());
+        MockMultipartFile mockFile = new MockMultipartFile("file", "test.png", "image/png", "Test content".getBytes());
 
         // Thiết lập hành vi của mock
         when(file.getOriginalFilename()).thenReturn(mockFile.getOriginalFilename());
@@ -54,8 +50,9 @@ class FileStorageServiceImplTest {
         String savedFilename = fileStorageServiceImpl.save(file);
 
         // Kiểm tra kết quả
-        assertEquals("test.jpg", savedFilename);
-        assertTrue(Files.exists(root.resolve("uploads/images/test.jpg")));
+        assertEquals("test.png", savedFilename);
+        assertTrue(Files.exists(root.resolve("test.png")));
+        assertEquals("Test content", new String(Files.readAllBytes(root.resolve("test.png"))));
     }
 
     @Test
@@ -65,17 +62,17 @@ class FileStorageServiceImplTest {
 
         // Kiểm tra ngoại lệ khi gọi phương thức save
         Exception exception = assertThrows(RuntimeException.class, () -> fileStorageServiceImpl.save(file));
-        assertEquals("File name is invalid", exception.getMessage());
+        assertEquals("Could not save file: File name is invalid", exception.getMessage());
     }
 
     @Test
-    public void testLoad_FileExists_ReturnsResource() throws Exception {
+    public void testLoad() throws Exception {
         // Tạo một tệp mẫu và lưu vào thư mục gốc
-        MockMultipartFile mockFile = new MockMultipartFile("file", "test.txt", "text/plain", "Test content".getBytes());
+        MockMultipartFile mockFile = new MockMultipartFile("file", "testSave.png", "image/png", "Test content".getBytes());
         fileStorageServiceImpl.save(mockFile);
 
         // Gọi phương thức load
-        Resource resource = fileStorageServiceImpl.load("test.txt");
+        Resource resource = fileStorageServiceImpl.load("testSave.png");
 
         // Kiểm tra kết quả
         assertNotNull(resource);
@@ -83,16 +80,16 @@ class FileStorageServiceImplTest {
     }
 
     @Test
-    public void testLoad_FileDoesNotExist_ThrowsException() {
+    public void testLoadFileNotExist() {
         // Kiểm tra ngoại lệ khi gọi phương thức load với tệp không tồn tại
-        Exception exception = assertThrows(RuntimeException.class, () -> fileStorageServiceImpl.load("nonexistent.txt"));
+        Exception exception = assertThrows(RuntimeException.class, () -> fileStorageServiceImpl.load("nonexistent.png"));
         assertEquals("Could not read the file!", exception.getMessage());
     }
 
     @Test
-    public void testLoad_InvalidUrlResource_ThrowsException() throws Exception {
-        // Giả lập trường hợp tệp không thể đọc
-        Path invalidFilePath = Paths.get("invalid/path/to/file.txt");
+    public void testLoadInvalidUrlResource() throws Exception {
+        // Giả lập trường hợp tệp ko đọc đc
+        Path invalidFilePath = Paths.get("invalid/path/to/file.png");
         Resource resource = new UrlResource(invalidFilePath.toUri());
 
         // Kiểm tra ngoại lệ
