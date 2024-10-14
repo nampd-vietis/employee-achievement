@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="#{title.department_management}">Quản lý tài khoản</title>
+  <link rel="stylesheet" th:href="@{/css/list.css}">
+  <link rel="stylesheet" th:href="@{/css/header.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+</head>
+<body>
+
+<!-- Header -->
+<header th:replace="fragments/header :: header"></header>
+
+<!-- Navbar -->
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
+<!-- Main content -->
+<div class="container">
+  <h1 th:text="#{title.account_management}">Quản lý tài khoản</h1>
+
+  <!-- Danh sách phòng ban -->
+  <table class="common-table">
+    <thead>
+    <tr>
+      <th th:text="#{label.employee_id}">Mã nhân viên</th>
+      <th th:text="#{label.employee_name}">Tên nhân viên</th>
+      <th>Email</th>
+      <th>Password</th>
+      <th th:text="#{label.action}">Tác vụ</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="account : ${accounts}">
+      <td th:text="${account.employeeId}"></td>
+      <td th:text="${account.fullName}"></td>
+      <td th:text="${account.email}"></td>
+      <td th:text="${account.password}"></td>
+      <td style="text-align: center;"> <!-- Căn giữa các button -->
+        <form th:action="@{/admin/accounts/edit/{employeeId}(employeeId=${account.employeeId})}" method="get" style="display:inline;">
+          <button type="submit" th:text="#{button.update}">Sửa</button>
+        </form> |
+        <form th:action="@{/admin/accounts/delete/{employeeId}(employeeId=${account.employeeId})}" method="post" style="display:inline;">
+          <input type="hidden" name="_method" value="delete">
+          <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản này?')" th:text="#{button.delete}">Xóa</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!-- Nút Tạo mới -->
+  <div class="create-button-container">
+    <a href="/admin/accounts/new" class="create-button" th:text="#{button.create}">Tạo mới</a>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer th:replace="fragments/footer :: footer"></footer>
+
+</body>
+</html>

@@ -1,9 +1,12 @@
 package dev.vietis.nampd.employee.achievement.service;
 
+import dev.vietis.nampd.employee.achievement.model.dto.AccountDTO;
 import dev.vietis.nampd.employee.achievement.model.dto.EmployeeDTO;
+import dev.vietis.nampd.employee.achievement.model.entity.Employee;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EmployeeService {
     void createEmployee(EmployeeDTO employeeDto);
@@ -13,4 +16,20 @@ public interface EmployeeService {
     void deleteEmployee(Long id);
     EmployeeDTO getEmployeeById(Long id);
     List<EmployeeDTO> searchEmployees(String fullName, String email, String phoneNumber, String departmentName);
+
+    //quản lý tài khoản
+    // Tạo tài khoản cho một nhân viên
+    void createAccount(Long employeeId, AccountDTO accountDTO);
+
+    // Cập nhật tài khoản
+    void updateAccount(Long employeeId, AccountDTO accountDTO);
+
+    // Xóa tài khoản của một nhân viên
+    void deleteAccount(Long employeeId);
+
+    Optional<Employee> findById(Long employeeId);
+
+    List<Employee> getEmployeesWithoutAccount();
+
+    List<AccountDTO> getAllAccounts();
 }

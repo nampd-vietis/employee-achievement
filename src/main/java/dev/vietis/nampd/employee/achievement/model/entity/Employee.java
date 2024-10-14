@@ -62,7 +62,6 @@ public class Employee {
     private String notes;
 
     @Size(max = 255)
-    @NotNull
     @Column(name = "password", nullable = false)
     private String password;
 

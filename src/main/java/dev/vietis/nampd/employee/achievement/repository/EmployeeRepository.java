@@ -14,6 +14,7 @@ import java.util.Optional;
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Optional<Employee> findByEmail(String email);
     boolean existsByEmail(String email);
+    List<Employee> findByPasswordIsNull();
 
     @Query("SELECT e FROM Employee e LEFT JOIN e.department d WHERE " +
             "(e.fullName LIKE %:fullName% OR :fullName IS NULL) AND " +

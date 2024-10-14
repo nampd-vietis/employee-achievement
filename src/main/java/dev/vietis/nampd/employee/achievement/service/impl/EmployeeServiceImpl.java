@@ -1,6 +1,7 @@
 package dev.vietis.nampd.employee.achievement.service.impl;
 
 import dev.vietis.nampd.employee.achievement.mapper.EmployeeMapper;
+import dev.vietis.nampd.employee.achievement.model.dto.AccountDTO;
 import dev.vietis.nampd.employee.achievement.model.dto.EmployeeDTO;
 import dev.vietis.nampd.employee.achievement.model.entity.Department;
 import dev.vietis.nampd.employee.achievement.model.entity.Employee;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -70,6 +72,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public Optional<Employee> findById(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new NoSuchElementException("Employee not found"));
+        return Optional.ofNullable(employee);
+    }
+
+    @Override
     public void updateEmployee(Long id, EmployeeDTO updatedEmployeeDTO, MultipartFile imgFile) {
         Employee existingEmployee = employeeRepository.findById(updatedEmployeeDTO.getId())
                 .orElseThrow(() -> new NoSuchElementException("Employee not found"));
@@ -115,5 +124,69 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employees.stream()
                 .map(employeeMapper::toEmployeeDto)
                 .collect(Collectors.toList());
+    }
+
+    //QUẢN LÝ TÀI KHOẢN
+
+    // Lấy danh sách nhân viên chưa có tài khoản (password == null)
+    @Override
+    public List<Employee> getEmployeesWithoutAccount() {
+        return employeeRepository.findByPasswordIsNull();
+    }
+
+    @Override
+    public List<AccountDTO> getAllAccounts() {
+        // Lấy tất cả các nhân viên từ cơ sở dữ liệu
+        List<Employee> employees = employeeRepository.findAll();
+
+        // Chuyển đổi từ Employee sang AccountDTO
+        return employees.stream()
+                .filter(employee -> employee.getPassword() != null)
+                .map(employee -> {
+                    AccountDTO accountDTO = new AccountDTO();
+                    accountDTO.setEmployeeId(employee.getId());
+                    accountDTO.setFullName(employee.getFullName());
+                    accountDTO.setEmail(employee.getEmail());
+                    accountDTO.setPassword(employee.getPassword());
+                    return accountDTO;
+                })
+                .collect(Collectors.toList());
+    }
+
+    // Tạo tài khoản cho một nhân viên
+    @Override
+    public void createAccount(Long employeeId, AccountDTO accountDTO) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid employee Id:" + employeeId));
+
+        // Gán email và mã hóa mật khẩu vào Employee
+        employee.setEmail(accountDTO.getEmail());
+        employee.setPassword((accountDTO.getPassword()));
+
+        employeeRepository.save(employee);
+    }
+
+    // Cập nhật tài khoản
+    @Override
+    public void updateAccount(Long employeeId, AccountDTO accountDTO) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid employee Id:" + employeeId));
+
+        employee.setEmail(accountDTO.getEmail());
+        employee.setPassword((accountDTO.getPassword()));
+
+        employeeRepository.save(employee);
+    }
+
+    // Xóa tài khoản của một nhân viên
+    @Override
+    public void deleteAccount(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid employee Id:" + employeeId));
+
+        // Xóa password
+        employee.setPassword(null);
+
+        employeeRepository.save(employee);
     }
 }

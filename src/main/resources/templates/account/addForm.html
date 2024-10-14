@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{title.create_account}">Tạo tài khoản</title>
+    <link rel="stylesheet" th:href="@{/css/list.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <script>
+        // JavaScript để tự động điền email khi chọn nhân viên
+        function updateEmail() {
+            var select = document.getElementById("employeeSelect");
+            var selectedOption = select.options[select.selectedIndex];
+            var email = selectedOption.getAttribute("data-email");
+            document.getElementById("emailInput").value = email;
+        }
+    </script>
+    <style>
+        form {
+            width: 50%; /* Chiều rộng của form */
+            margin: 0 auto; /* Căn giữa form */
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style cho các thẻ input, select, textarea */
+        input[type="text"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%; /* Đảm bảo chiều rộng của thẻ input, textarea, select vừa với form */
+            padding: 8px; /* Thêm khoảng cách giữa nội dung và viền */
+            margin-bottom: 15px; /* Khoảng cách dưới các trường */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        /* Giới hạn chiều rộng của textarea */
+        textarea {
+            width: 100%; /* Đảm bảo textarea không bị quá dài */
+            resize: none; /* Không cho phép kéo dài textarea */
+            height: 100px; /* Chiều cao cố định */
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header th:replace="fragments/header :: header"></header>
+
+<!-- Navbar -->
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
+<h1 th:text="#{title.create_account}">Tạo tài khoản</h1>
+
+<form class="form-group" th:action="@{/admin/accounts}" th:object="${employeesWithoutAccount}" method="post">
+    <label for="employeeSelect">Chọn nhân viên</label>
+    <select id="employeeSelect" onchange="updateEmail()" required>
+        <option value="">-- Chọn nhân viên --</option>
+        <option th:each="employee : ${employeesWithoutAccount}"
+                th:value="${employee.id}"
+                th:text="${employee.id + ' - ' + employee.fullName}"
+                th:attr="data-email=${employee.email}">
+        </option>
+    </select><br><br>
+
+    <!-- Thêm trường email để hiển thị email của nhân viên đã chọn -->
+    <label th:for="email">Email</label>
+    <input type="text" id="emailInput" name="email" placeholder="Email" readonly>
+
+    <label th:for="password" th:text="#{login.password.label}">Mật khẩu</label>
+    <input type="password" id="password" name="password" placeholder="Password" required>
+
+    <button type="submit" th:text="#{button.submit}">Xác nhận</button>
+    <a th:href="@{/admin/accounts}" class="cancel-button" th:text="#{button.cancel}">Hủy bỏ</a>
+</form>
+
+<!-- Footer -->
+<footer th:replace="fragments/footer :: footer"></footer>
+
+</body>
+</html>
