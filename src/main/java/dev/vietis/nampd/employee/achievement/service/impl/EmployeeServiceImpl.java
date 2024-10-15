@@ -155,9 +155,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     // Tạo tài khoản cho một nhân viên
     @Override
-    public void createAccount(Long employeeId, AccountDTO accountDTO) {
-        Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid employee Id:" + employeeId));
+    public void createAccount(AccountDTO accountDTO) {
+        log.info("data e: {}" , accountDTO.getEmployeeId());
+        Employee employee = employeeRepository.findById(accountDTO.getEmployeeId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid employee Id:" + accountDTO.getEmployeeId()));
 
         // Gán email và mã hóa mật khẩu vào Employee
         employee.setEmail(accountDTO.getEmail());

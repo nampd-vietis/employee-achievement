@@ -19,7 +19,7 @@ public interface EmployeeService {
 
     //quản lý tài khoản
     // Tạo tài khoản cho một nhân viên
-    void createAccount(Long employeeId, AccountDTO accountDTO);
+    void createAccount(AccountDTO accountDTO);
 
     // Cập nhật tài khoản
     void updateAccount(Long employeeId, AccountDTO accountDTO);

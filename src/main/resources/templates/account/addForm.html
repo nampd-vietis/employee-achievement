@@ -60,9 +60,9 @@
 
 <h1 th:text="#{title.create_account}">Tạo tài khoản</h1>
 
-<form class="form-group" th:action="@{/admin/accounts}" th:object="${employeesWithoutAccount}" method="post">
+<form class="form-group" th:action="@{/admin/accounts}" th:object="${account}" method="post">
     <label for="employeeSelect">Chọn nhân viên</label>
-    <select id="employeeSelect" onchange="updateEmail()" required>
+    <select id="employeeSelect" name="employeeId" onchange="updateEmail()" required>
         <option value="">-- Chọn nhân viên --</option>
         <option th:each="employee : ${employeesWithoutAccount}"
                 th:value="${employee.id}"

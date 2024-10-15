@@ -1,10 +1,10 @@
 package dev.vietis.nampd.employee.achievement.controller;
 
 import dev.vietis.nampd.employee.achievement.model.dto.AccountDTO;
-import dev.vietis.nampd.employee.achievement.model.dto.EmployeeDTO;
 import dev.vietis.nampd.employee.achievement.model.entity.Employee;
 import dev.vietis.nampd.employee.achievement.service.EmployeeService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @Controller
-@RequestMapping("/admin/accounts")
+@RequestMapping("admin/accounts")
 public class AccountController {
 
     private final EmployeeService employeeService;
@@ -43,14 +44,15 @@ public class AccountController {
     }
 
     // Xử lý việc tạo tài khoản
-    @PostMapping("/{employeeId}")
-    public String createAccount(@PathVariable Long employeeId,
-                                @ModelAttribute @Valid AccountDTO accountDTO,
+    @PostMapping()
+    public String createAccount(@ModelAttribute @Valid AccountDTO accountDTO,
                                 BindingResult result) {
+        log.info("vao controller:");
         if (result.hasErrors()) {
             return "account/addForm";
         }
-        employeeService.createAccount(employeeId, accountDTO);
+
+        employeeService.createAccount(accountDTO);
         return "redirect:/admin/accounts";
     }
 
