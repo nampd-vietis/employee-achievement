@@ -58,7 +58,7 @@ public class EmployeeController {
         List<DepartmentDTO> departments = departmentService.getAllDepartments();
         model.addAttribute("departments", departments);
 
-        return "employee/addForm"; // Trả về view form tạo phòng ban
+        return "employee/add_form"; // Trả về view form tạo phòng ban
     }
 
     // Xử lý tạo mới
@@ -78,7 +78,7 @@ public class EmployeeController {
             return "redirect:/admin/employees";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Lỗi khi tạo nhân viên");
-            return "employee/addForm";
+            return "employee/add_form";
         }
     }
 
@@ -93,7 +93,7 @@ public class EmployeeController {
             List<DepartmentDTO> departments = departmentService.getAllDepartments();
             model.addAttribute("departments", departments);
 
-            return "employee/updateForm";
+            return "employee/update_form";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Nhân viên không tồn tại");
             return "error";
@@ -111,10 +111,10 @@ public class EmployeeController {
             return "redirect:/admin/employees";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Nhân viên không tồn tại");
-            return "employee/updateForm";
+            return "employee/update_form";
         } catch (Exception e) {
             model.addAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
-            return "employee/updateForm";
+            return "employee/update_form";
         }
     }
 
@@ -138,6 +138,6 @@ public class EmployeeController {
                                   Model model) {
         List<EmployeeDTO> employees = employeeService.searchEmployees(fullName, email, phoneNumber, departmentName);
         model.addAttribute("employees", employees);
-        return "employee/searchResults :: employeeData"; // Trả về fragment HTML
+        return "employee/search_results :: employeeData"; // Trả về fragment HTML
     }
 }

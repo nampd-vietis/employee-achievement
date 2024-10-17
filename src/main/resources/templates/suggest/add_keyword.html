@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Keyword</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .form-container {
+            width: 50%;
+            margin: 0 auto;
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-group input[type="radio"] {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .form-group .radio-group {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        .form-buttons {
+            text-align: center;
+        }
+
+        .form-buttons button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-buttons .close-btn {
+            background-color: #ff4d4d;
+            color: white;
+        }
+
+        .form-buttons .add-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <h2>Add New Keyword</h2>
+    <form action="/search" method="post">
+        <div class="form-group">
+            <label for="searchKeyword">Search Keywords</label>
+            <input type="text" id="searchKeyword" name="searchKeyword" placeholder="Search Keywords" required>
+        </div>
+
+        <div class="form-group">
+            <label for="displayKeyword">Match Keywords</label>
+            <input type="text" id="displayKeyword" name="displayKeyword" placeholder="Display Keywords" required>
+        </div>
+
+        <div class="form-group">
+            <label for="platform">Platform</label>
+            <select id="platform" name="platform" required>
+                <option value="GOOGLE">GOOGLE</option>
+                <option value="YAHOO!">YAHOO!</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="matchPattern">Matching pattern</label>
+            <select id="matchPattern" name="matchPattern" required>
+                <option value="PARTIAL">Partial match</option>
+                <option value="UNANIMOUS">Unanimous</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Device</label>
+            <div class="radio-group">
+                <input type="radio" id="devicePC" name="device" value="PC" checked>
+                <label for="devicePC">PC</label>
+            </div>
+            <div class="radio-group">
+                <input type="radio" id="deviceSmartphone" name="device" value="SMARTPHONE">
+                <label for="deviceSmartphone">Smartphone</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="remarks">Remarks</label>
+            <input type="text" id="remarks" name="remarks" placeholder="Remarks">
+        </div>
+
+        <div class="form-buttons">
+            <button type="button" class="close-btn" onclick="window.location.href='/search';">Close</button>
+            <button type="submit" class="add-btn">Addition</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

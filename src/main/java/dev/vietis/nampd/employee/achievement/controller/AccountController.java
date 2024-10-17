@@ -40,16 +40,15 @@ public class AccountController {
 
         model.addAttribute("account", new AccountDTO());
         model.addAttribute("employeesWithoutAccount", employeesWithoutAccount);
-        return "account/addForm";
+        return "account/add_form";
     }
 
     // Xử lý việc tạo tài khoản
     @PostMapping()
     public String createAccount(@ModelAttribute @Valid AccountDTO accountDTO,
                                 BindingResult result) {
-        log.info("vao controller:");
         if (result.hasErrors()) {
-            return "account/addForm";
+            return "account/add_form";
         }
 
         employeeService.createAccount(accountDTO);
@@ -65,7 +64,7 @@ public class AccountController {
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.setEmail(employee.getEmail());
         model.addAttribute("account", accountDTO);
-        return "account/updateForm";
+        return "account/update_form";
     }
 
     // Xử lý việc cập nhật tài khoản
@@ -74,7 +73,7 @@ public class AccountController {
                                 @ModelAttribute @Valid AccountDTO accountDTO,
                                 BindingResult result) {
         if (result.hasErrors()) {
-            return "account/updateForm";
+            return "account/update_form";
         }
 
         employeeService.updateAccount(employeeId, accountDTO);

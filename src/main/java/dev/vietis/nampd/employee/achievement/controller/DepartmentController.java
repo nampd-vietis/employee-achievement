@@ -1,7 +1,6 @@
 package dev.vietis.nampd.employee.achievement.controller;
 
 import dev.vietis.nampd.employee.achievement.model.dto.DepartmentDTO;
-import dev.vietis.nampd.employee.achievement.model.entity.Employee;
 import dev.vietis.nampd.employee.achievement.service.DepartmentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,7 +42,7 @@ public class DepartmentController {
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("department", new DepartmentDTO());
-        return "department/addForm";
+        return "department/add_form";
     }
 
     // Xử lý tạo mới
@@ -54,7 +53,7 @@ public class DepartmentController {
             return "redirect:/admin/departments";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Phòng ban đã tồn tại");
-            return "department/addForm";
+            return "department/add_form";
         }
     }
 
@@ -64,7 +63,7 @@ public class DepartmentController {
         try {
             DepartmentDTO department = departmentService.getDepartmentById(id);
             model.addAttribute("department", department);
-            return "department/updateForm"; // Trả về view form chỉnh sửa phòng ban
+            return "department/update_form"; // Trả về view form chỉnh sửa phòng ban
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Phòng ban không tồn tại");
             return "error"; // Trả về view lỗi
@@ -81,7 +80,7 @@ public class DepartmentController {
             return "redirect:/admin/departments";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Phòng ban không tồn tại");
-            return "department/updateForm";
+            return "department/update_form";
         }
     }
 

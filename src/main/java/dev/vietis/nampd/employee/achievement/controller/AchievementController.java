@@ -31,13 +31,6 @@ public class AchievementController {
         return "achievement/list";
     }
 
-//    @GetMapping("/{employeeId}")
-//    public String getAchievementByEmployeeId(@PathVariable Long employeeId, Model model) {
-//        List<AchievementDTO> achievements = achievementService.getAchievementByEmployeeId(employeeId);
-//        model.addAttribute("achievement", achievements);
-//        return "achievement/detail";
-//    }
-
     // Hiển thị form tạo mới
     @GetMapping("/new")
     public String showCreateForm(Model model) {
@@ -47,7 +40,7 @@ public class AchievementController {
         List<EmployeeDTO> employeeDTOS = employeeService.getAllEmployees();
         model.addAttribute("employees", employeeDTOS);
 
-        return "achievement/addForm";
+        return "achievement/add_form";
     }
 
     @PostMapping
@@ -67,7 +60,7 @@ public class AchievementController {
             List<EmployeeDTO> employeeDTOS = employeeService.getAllEmployees();
             model.addAttribute("employees", employeeDTOS);
 
-            return "achievement/updateForm";
+            return "achievement/update_form";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Thành tích không tồn tại");
             return "error";
@@ -83,7 +76,7 @@ public class AchievementController {
             return "redirect:/admin/achievements";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Achievement không tồn tại");
-            return "achievement/updateForm";
+            return "achievement/update_form";
         }
     }
 

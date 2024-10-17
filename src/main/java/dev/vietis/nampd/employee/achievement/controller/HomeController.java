@@ -1,7 +1,6 @@
 package dev.vietis.nampd.employee.achievement.controller;
 
 import dev.vietis.nampd.employee.achievement.model.dto.EmployeeAchievementsSumDTO;
-import dev.vietis.nampd.employee.achievement.model.entity.Employee;
 import dev.vietis.nampd.employee.achievement.service.AchievementService;
 import dev.vietis.nampd.employee.achievement.service.FileStorageService;
 import jakarta.servlet.http.HttpSession;
@@ -47,7 +46,7 @@ public class HomeController {
 
         model.addAttribute("topEmployees", topEmployees);
         model.addAttribute("adminName", session.getAttribute("loggedInEmployee"));
-        return "admin-home";
+        return "admin_home";
     }
 
     @GetMapping("/user/home")
@@ -61,6 +60,6 @@ public class HomeController {
 
         model.addAttribute("topEmployees", topEmployees);
         model.addAttribute("userName", session.getAttribute("loggedInEmployee"));
-        return "user-home";
+        return "user_home";
     }
 }
