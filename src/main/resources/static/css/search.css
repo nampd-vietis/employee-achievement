@@ -1,0 +1,104 @@
+/* Định dạng tổng thể */
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+/* Định dạng cho container chính */
+.container {
+    margin: 20px auto;
+    width: 90%;
+    max-width: 1200px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
+    overflow-x: auto; /* Thêm tính năng cuộn ngang */
+}
+
+/* Định dạng cho header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header label {
+    font-weight: bold;
+}
+
+.header input[type="month"] {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.header a.add-btn, .header a.switching-btn {
+    padding: 10px 16px;
+    background-color: #6300ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: bold;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    display: inline-block;
+}
+
+.header a.add-btn:hover, .header a.switching-btn:hover {
+    background-color: #9761f6;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.header a.add-btn:active, .header a.switching-btn:active {
+    background-color: #5400d4;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+    transform: translateY(2px);
+}
+
+/* Định dạng cho bảng */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+/* Định dạng chỉ cho tiêu đề (th) trong thead */
+thead th {
+    background-color: #0096FF;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 12px;
+    text-align: center;
+    font-size: 14px;
+    border: 1px solid #e0e0e0;
+    word-wrap: break-word;
+}
+
+/* Định dạng dữ liệu trong tbody (td) */
+tbody td {
+    background-color: #f8f8f8;
+    padding: 12px;
+    text-align: left; /* Văn bản căn trái */
+    font-size: 14px;
+    font-weight: normal; /* Không in đậm */
+    border: 1px solid #e0e0e0;
+    word-wrap: break-word; /* Giúp nội dung dài tự động xuống dòng */
+}
+.text-red {
+    color: red;
+}
+
+.capture-icon {
+    width: 16px;
+    height: 16px;
+    margin-left: 8px;
+    cursor: pointer;
+}

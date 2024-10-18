@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/search.css}">
+    <title>History Suggest Detail</title>
+    <script>
+        function updateTableHeaders() {
+            const dateInput = document.getElementById('date');
+            const selectedDate = new Date(dateInput.value);
+            const year = selectedDate.getFullYear();
+            const month = selectedDate.getMonth();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            const tableHeaderRow = document.querySelector('table thead tr');
+
+            // Xóa các thẻ <th> hiện tại sau cột thứ 4
+            while (tableHeaderRow.children.length > 5) {
+                tableHeaderRow.removeChild(tableHeaderRow.lastChild);
+            }
+
+            // Thêm các thẻ <th> tương ứng với số ngày của tháng
+            for (let dayIndex = 1; dayIndex <= daysInMonth; dayIndex++) {
+                const th = document.createElement('th');
+                th.textContent = dayIndex;
+                tableHeaderRow.appendChild(th);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const dateInput = document.getElementById('date');
+
+            if (!dateInput.value) {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                dateInput.value = `${year}-${month}`;
+            }
+
+            dateInput.addEventListener('change', updateTableHeaders);
+            updateTableHeaders();
+        });
+
+        function viewCapture(capturePath) {
+            window.open(capturePath, '_blank');
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div>
+            <label for="date">Date:</label>
+            <input type="month" id="date" name="date" value="2024-10">
+        </div>
+        <div>
+            <a href="/search" class="switching-btn">Display Switching</a>
+            <a href="/search/new" class="add-btn">+ Add New</a>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>SEARCH KEYWORDS</th>
+                <th>DISPLAY KEYWORDS</th>
+                <th>PLATFORM</th>
+                <th>DEVICE</th>
+                <th>MATCH PATTERN</th>
+                <th th:each="day : ${#numbers.sequence(1, 31)}" th:text="${day}">Day</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="result : ${results}">
+                <td th:text="${result.searchKeyword}"></td>
+                <td th:text="${result.displayKeyword}"></td>
+                <td th:text="${result.platform}"></td>
+                <td th:text="${result.device}"></td>
+                <td th:text="${result.matchPattern}"></td>
+
+                <td th:each="day : ${#numbers.sequence(1, 31)}">
+                    <div th:if="${#temporals.format(result.searchDate, 'dd') == day.toString()}">
+                        <span class="icon_img">
+                            <a th:href="@{/capture/{fileName}(fileName = ${result.capturePath})}">📷</a>
+                        </span>
+                        <div th:each="suggestion : ${result.suggestionList}">
+                            <div>
+                                <span th:text="${suggestion.suggestText}" th:class="${suggestion.isMatch ? 'text-red' : ''}"></span><br/>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
+
