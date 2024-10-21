@@ -4,7 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" th:href="@{/css/search.css}">
-  <title>History Suggest</title>
+  <link rel="stylesheet" th:href="@{/css/header.css}">
+  <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <title>History Suggest Detail</title>
   <script>
     function updateTableHeaders() {
       const dateInput = document.getElementById('date');
@@ -13,28 +16,48 @@
       const month = selectedDate.getMonth();
       const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-      const tableHeaders = document.querySelectorAll('table thead tr th:nth-child(n+5)'); // Chọn từ th thứ 5 trở đi
+      const tableHeaderRow = document.querySelector('table thead tr');
 
-      // Bắt đầu cập nhật các thẻ th cho số ngày trong tháng
-      tableHeaders.forEach((header, index) => {
-        if (index < daysInMonth) {
-          header.style.display = ''; // Hiển thị th cho các ngày hợp lệ
-          header.textContent = index + 1; // Đặt số thứ tự chính xác của ngày (bắt đầu từ 1)
-        } else {
-          header.style.display = 'none'; // Ẩn các thẻ th vượt quá số ngày trong tháng
-        }
-      });
+      // Xóa các thẻ <th> hiện tại sau cột thứ 4
+      while (tableHeaderRow.children.length > 5) {
+        tableHeaderRow.removeChild(tableHeaderRow.lastChild);
+      }
+
+      // Thêm các thẻ <th> tương ứng với số ngày của tháng
+      for (let dayIndex = 1; dayIndex <= daysInMonth; dayIndex++) {
+        const th = document.createElement('th');
+        th.textContent = dayIndex;
+        tableHeaderRow.appendChild(th);
+      }
     }
-
 
     window.addEventListener('DOMContentLoaded', () => {
       const dateInput = document.getElementById('date');
+
+      if (!dateInput.value) {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        dateInput.value = `${year}-${month}`;
+      }
+
       dateInput.addEventListener('change', updateTableHeaders);
       updateTableHeaders();
     });
+
+    function viewCapture(capturePath) {
+      window.open(capturePath, '_blank');
+    }
   </script>
 </head>
 <body>
+
+<!-- Header -->
+<header th:replace="fragments/header :: header"></header>
+
+<!-- Navbar -->
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
 <div class="container">
   <div class="header">
     <div>
@@ -53,20 +76,38 @@
       <th>SEARCH KEYWORDS</th>
       <th>DISPLAY KEYWORDS</th>
       <th>PLATFORM</th>
+      <th>DEVICE</th>
       <th>MATCH PATTERN</th>
       <th th:each="day : ${#numbers.sequence(1, 31)}" th:text="${day}">Day</th>
     </tr>
     </thead>
     <tbody>
-      <tr th:each="result : ${results}">
-        <td th:text="${result.searchKeyword}"></td>
-        <td th:text="${result.displayKeyword}"></td>
-        <td th:text="${result.platform}"></td>
-        <td th:text="${result.matchPattern}"></td>
-      </tr>
+    <tr th:each="result : ${results}">
+      <td th:text="${result.searchKeyword}"></td>
+      <td th:text="${result.displayKeyword}"></td>
+      <td th:text="${result.platform}"></td>
+      <td th:text="${result.device}"></td>
+      <td th:text="${result.matchPattern}"></td>
+
+      <td th:each="day : ${#numbers.sequence(1, 31)}">
+        <div th:if="${#temporals.format(result.searchDate, 'dd') == day.toString()}">
+          <span th:if="${result.isMatch}">
+            <span class="icon-check">✔</span>
+          </span>
+          <span th:if="${!result.isMatch}">
+            <span class="no-match">-</span>
+          </span>
+        </div>
+      </td>
+    </tr>
     </tbody>
   </table>
 </div>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+
 </body>
 </html>
+
+
 

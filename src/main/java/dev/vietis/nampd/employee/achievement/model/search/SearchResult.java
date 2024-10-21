@@ -24,7 +24,5 @@ public class SearchResult {
     private boolean isMatch;
     private LocalDate searchDate;
 
-    @Transient
-    private List<SearchResultResponse.Suggestion> suggestionList;
 }
 

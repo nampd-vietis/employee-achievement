@@ -1,7 +1,6 @@
 package dev.vietis.nampd.employee.achievement.config;
 
 import dev.vietis.nampd.employee.achievement.auth.AuthInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +25,7 @@ public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
-                .addPathPatterns("/admin/**", "/user/**")
+                .addPathPatterns("/admin/**", "/user/**", "/search/**")
                 .excludePathPatterns("/login", "/logout");
 
         registry.addInterceptor(localeChangeInterceptor());

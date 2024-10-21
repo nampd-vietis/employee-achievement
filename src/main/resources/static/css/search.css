@@ -82,16 +82,22 @@ thead th {
     word-wrap: break-word;
 }
 
-/* Định dạng dữ liệu trong tbody (td) */
 tbody td {
-    background-color: #f8f8f8;
-    padding: 12px;
+    white-space: nowrap; /* Giữ nội dung trên một dòng, không tự ngắt dòng */
     text-align: left; /* Văn bản căn trái */
     font-size: 14px;
-    font-weight: normal; /* Không in đậm */
+    font-weight: normal;
     border: 1px solid #e0e0e0;
-    word-wrap: break-word; /* Giúp nội dung dài tự động xuống dòng */
+    padding: 12px;
+    overflow: hidden; /* Ẩn nội dung tràn */
+    text-overflow: ellipsis
 }
+
+.container {
+    overflow-x: auto;
+    white-space: nowrap; /* Đảm bảo các cột không tự động xuống dòng */
+}
+
 .text-red {
     color: red;
 }

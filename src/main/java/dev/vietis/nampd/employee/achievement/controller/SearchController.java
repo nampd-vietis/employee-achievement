@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import dev.vietis.nampd.employee.achievement.model.search.SearchKeyword;
-import dev.vietis.nampd.employee.achievement.model.search.SearchResult;
 import dev.vietis.nampd.employee.achievement.service.SearchService;
 import dev.vietis.nampd.employee.achievement.repository.search.SearchKeywordRepository;
 import dev.vietis.nampd.employee.achievement.repository.search.SearchResultRepository;
@@ -35,7 +34,7 @@ public class SearchController {
     @PostMapping
     public String addKeyword(@ModelAttribute("keyword") SearchKeyword keyword) {
         searchKeywordRepository.save(keyword);
-        return "redirect:/search";
+        return "redirect:/search/detail";
     }
 
     @PostMapping("/perform")
@@ -55,7 +54,7 @@ public class SearchController {
 
     @GetMapping
     public String showSearchResults(Model model) {
-        List<SearchResult> results = searchResultRepository.findAll();
+        List<SearchResultResponse> results = searchService.getSearchResults();
         model.addAttribute("results", results);
         return "suggest/suggest_results";
     }
@@ -63,12 +62,15 @@ public class SearchController {
     @GetMapping("/detail")
     public String showSearchResultsDetail(Model model) {
         List<SearchResultResponse> results = searchService.getSearchResults();
-        System.out.println(results.size());
-        for (SearchResultResponse result : results) {
-            System.out.println(result.getSuggestionList());
-        }
         model.addAttribute("results", results);
         return "suggest/suggest_results_detail";
     }
+
+//    @GetMapping("/detail-json")
+//    @ResponseBody
+//    public ResponseEntity<?> showSearchResultsDetail() {
+//        List<SearchResultResponse> results = searchService.getSearchResults();
+//        return ResponseEntity.ok(results);
+//    }
 }
 

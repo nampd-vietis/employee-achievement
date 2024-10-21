@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add New Keyword</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -75,6 +78,13 @@
     </style>
 </head>
 <body>
+
+<!-- Header -->
+<header th:replace="fragments/header :: header"></header>
+
+<!-- Navbar -->
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
 <div class="form-container">
     <h2>Add New Keyword</h2>
     <form action="/search" method="post">
@@ -127,5 +137,8 @@
         </div>
     </form>
 </div>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+
 </body>
 </html>

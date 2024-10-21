@@ -20,7 +20,7 @@ public class SearchScheduler {
 
     // Lên lịch chạy mỗi ngày lúc 9h sáng
 //    @Scheduled(cron = "0 0 9 * * *")
-    @Scheduled(cron = "0 */3 * * * *")
+//    @Scheduled(cron = "0 */3 * * * *")
     public void scheduleDailySearch()
     {
         System.out.println("Scheduled Search Running...");

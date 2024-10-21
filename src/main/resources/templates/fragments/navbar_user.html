@@ -7,6 +7,7 @@
 <nav th:fragment="navbar_user" class="navbar">
   <ul>
     <li><a th:href="@{user/home}" th:text="#{navbar.home}">Trang chủ</a></li>
+    <li><a th:href="@{/search}">Suggest</a></li>
     <li><a th:href="@{/logout}" methods="post" th:text="#{navbar.logout}">Đăng xuất</a></li>
   </ul>
 </nav>

@@ -84,29 +84,19 @@ public class SearchService {
             String allSuggests = joinSuggestions(suggestions);
             boolean isMatch = false;
 
-            List<SearchResultResponse.Suggestion> suggestionList = new ArrayList<>();
-
             for (WebElement suggestion : suggestions) {
                 String suggestText = suggestion.getText();
 
-                SearchResultResponse.Suggestion suggestionObj = new SearchResultResponse.Suggestion();
-                suggestionObj.setSuggestText(suggestText);
-
                 boolean match = checkMatchPattern(suggestText, displayKeyword, searchKeyword.getMatchPattern());
-                suggestionObj.setMatch(match);
-
                 if (match) {
                     isMatch = true;
+                    break;
                 }
-
-                suggestionList.add(suggestionObj);
-
-                System.out.println(suggestionList);
             }
 
             String fileName = captureScreenshot(driver, keyword, platform, searchKeyword.getDevice());
 
-            saveSearchResult(allSuggests, isMatch, fileName, searchKeyword, suggestionList);
+            saveSearchResult(allSuggests, isMatch, fileName, searchKeyword);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -150,16 +140,25 @@ public class SearchService {
         return allSuggests.toString();
     }
 
-    public void saveSearchResult(String allSuggests, boolean isMatch, String capturePath, SearchKeyword searchKeyword, List<SearchResultResponse.Suggestion> suggestionList) {
-        SearchResult result = new SearchResult();
+    public void saveSearchResult(String allSuggests, boolean isMatch, String capturePath, SearchKeyword searchKeyword) {
+        Optional<SearchResult> existingResult = searchResultRepository.findBySearchKeywordAndSearchDate(searchKeyword, LocalDate.now());
 
-        result.setSearchKeyword(searchKeyword);
+        SearchResult result;
 
-        result.setCapturePath(capturePath);
-        result.setSuggestions(allSuggests);
-        result.setMatch(isMatch);
-        result.setSearchDate(LocalDate.now());
-        result.setSuggestionList(suggestionList);
+        if (existingResult.isPresent()) {
+            result = existingResult.get();
+            result.setSuggestions(allSuggests);
+            result.setMatch(isMatch);
+            result.setCapturePath(capturePath);
+        } else {
+            result = new SearchResult();
+            result.setSearchKeyword(searchKeyword);
+
+            result.setCapturePath(capturePath);
+            result.setSuggestions(allSuggests);
+            result.setMatch(isMatch);
+            result.setSearchDate(LocalDate.now());
+        }
 
         searchResultRepository.save(result);
     }
@@ -169,17 +168,60 @@ public class SearchService {
         List<SearchResultResponse> responseList = new ArrayList<>();
 
         for (SearchResult result : results) {
-            SearchKeyword keyword = result.getSearchKeyword();
+            SearchResultResponse response = new SearchResultResponse();
 
-            // Lấy suggestionList từ result
-            List<SearchResultResponse.Suggestion> suggestionList = result.getSuggestionList();
+            response.setSearchKeyword(result.getSearchKeyword().getSearchKeyword());
+            response.setDisplayKeyword(result.getSearchKeyword().getDisplayKeyword());
+            response.setCapturePath(result.getCapturePath());
+            response.setPlatform(result.getSearchKeyword().getPlatform().toString());
+            response.setDevice(result.getSearchKeyword().getDevice().toString());
+            response.setMatchPattern(result.getSearchKeyword().getMatchPattern().toString());
+            response.setSearchDate(result.getSearchDate());
+            response.setMatch(result.isMatch());
 
-            // Tạo SearchResultResponse với suggestionList đã xử lý
-            SearchResultResponse response = new SearchResultResponse(result, keyword, suggestionList);
+            List<SearchResultResponse.Suggestion> suggestionList = parseSuggestions(result.getSuggestions(), result.getSearchKeyword().getDisplayKeyword(), result.getSearchKeyword().getMatchPattern());
+            response.setSuggestionList(suggestionList);
 
             responseList.add(response);
         }
+
         return responseList;
+    }
+
+    private List<SearchResultResponse.Suggestion> parseSuggestions(String suggestions, String displayKeyword, SearchKeyword.MatchPattern pattern) {
+        List<SearchResultResponse.Suggestion> suggestionList = new ArrayList<>();
+        if (suggestions == null || suggestions.isEmpty()) {
+            return suggestionList;
+        }
+
+        String[] suggestArray = suggestions.split(";");
+
+        for (String suggest : suggestArray) {
+            SearchResultResponse.Suggestion suggestion = new SearchResultResponse.Suggestion();
+            suggestion.setSuggestText(suggest.trim());
+
+            boolean isMatch = checkMatchPattern(suggest.trim(), displayKeyword, pattern);
+            suggestion.setMatch(isMatch);
+
+            suggestionList.add(suggestion);
+        }
+
+        return suggestionList;
+    }
+
+    private List<String> filterMainSuggestions(List<WebElement> suggestions) {
+        List<String> mainSuggestions = new ArrayList<>();
+
+        for (WebElement suggestion : suggestions) {
+            List<WebElement> subSuggestionElements = suggestion.findElements(By.cssSelector(".sub-suggestion-class")); // Thay thế bằng lớp CSS thực tế của sub-suggestions
+
+            if (subSuggestionElements.isEmpty()) {
+                String suggestText = suggestion.getText();
+                mainSuggestions.add(suggestText);
+            }
+        }
+
+        return mainSuggestions;
     }
 }
 

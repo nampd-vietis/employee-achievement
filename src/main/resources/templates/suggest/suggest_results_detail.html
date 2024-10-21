@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/search.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
     <title>History Suggest Detail</title>
     <script>
         function updateTableHeaders() {
@@ -48,6 +51,12 @@
     </script>
 </head>
 <body>
+<!-- Header -->
+<header th:replace="fragments/header :: header"></header>
+
+<!-- Navbar -->
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
 <div class="container">
     <div class="header">
         <div>
@@ -82,12 +91,23 @@
                 <td th:each="day : ${#numbers.sequence(1, 31)}">
                     <div th:if="${#temporals.format(result.searchDate, 'dd') == day.toString()}">
                         <span class="icon_img">
-                            <a th:href="@{/capture/{fileName}(fileName = ${result.capturePath})}">📷</a>
+                            <a th:href="@{'/capture/' + ${result.capturePath}}">📷</a>
                         </span>
-                        <div th:each="suggestion : ${result.suggestionList}">
-                            <div>
-                                <span th:text="${suggestion.suggestText}" th:class="${suggestion.isMatch ? 'text-red' : ''}"></span><br/>
+
+                        <br>
+
+                        <div th:if="${result.suggestionList != null}">
+                            <div th:each="suggestion : ${result.suggestionList}">
+                                <div th:if="${suggestion.suggestText.length() > 0}">
+                                    <span th:text="${suggestion.suggestText}" th:class="${suggestion.isMatch ? 'text-red' : ''}"></span>
+                                </div>
+                                <div th:if="${suggestion.suggestText.length() <= 0}">
+                                    <span>Not found</span>
+                                </div>
                             </div>
+                        </div>
+                        <div th:if="${result.suggestionList == null}">
+                            <span>No data</span>
                         </div>
                     </div>
                 </td>
@@ -96,6 +116,15 @@
         </tbody>
     </table>
 </div>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+
 </body>
+<script>
+    var results = /*[[${results}]]*/ '[]';
+    console.log(results, "daaa out");
+</script>
 </html>
+
+
 
