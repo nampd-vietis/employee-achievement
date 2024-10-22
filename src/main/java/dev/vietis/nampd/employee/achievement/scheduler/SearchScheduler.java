@@ -18,8 +18,8 @@ public class SearchScheduler {
         this.searchKeywordRepository = searchKeywordRepository;
     }
 
-    // Lên lịch chạy mỗi ngày lúc 9h sáng
-//    @Scheduled(cron = "0 0 9 * * *")
+    // Lên lịch chạy mỗi ngày lúc 9h30 sáng
+//    @Scheduled(cron = "0 30 9 * * *")
 //    @Scheduled(cron = "0 */3 * * * *")
     public void scheduleDailySearch()
     {

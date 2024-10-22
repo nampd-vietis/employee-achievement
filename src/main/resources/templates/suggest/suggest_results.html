@@ -1,54 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" th:href="@{/css/search.css}">
-  <link rel="stylesheet" th:href="@{/css/header.css}">
-  <link rel="stylesheet" th:href="@{/css/footer.css}">
-  <link rel="stylesheet" th:href="@{/css/navbar.css}">
-  <title>History Suggest Detail</title>
-  <script>
-    function updateTableHeaders() {
-      const dateInput = document.getElementById('date');
-      const selectedDate = new Date(dateInput.value);
-      const year = selectedDate.getFullYear();
-      const month = selectedDate.getMonth();
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/search.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <title>History Suggest Detail</title>
+    <script>
+      function updateTableHeaders() {
+        const dateInput = document.getElementById('date');
+        const selectedDate = new Date(dateInput.value);
+        const year = selectedDate.getFullYear();
+        const month = selectedDate.getMonth();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-      const tableHeaderRow = document.querySelector('table thead tr');
+        const tableHeaderRow = document.querySelector('table thead tr');
 
-      // Xóa các thẻ <th> hiện tại sau cột thứ 4
-      while (tableHeaderRow.children.length > 5) {
-        tableHeaderRow.removeChild(tableHeaderRow.lastChild);
+        // Xóa các thẻ <th> hiện tại sau cột thứ 4
+        while (tableHeaderRow.children.length > 5) {
+          tableHeaderRow.removeChild(tableHeaderRow.lastChild);
+        }
+
+        // Thêm các thẻ <th> tương ứng với số ngày của tháng
+        for (let dayIndex = 1; dayIndex <= daysInMonth; dayIndex++) {
+          const th = document.createElement('th');
+          th.textContent = dayIndex;
+          tableHeaderRow.appendChild(th);
+        }
       }
 
-      // Thêm các thẻ <th> tương ứng với số ngày của tháng
-      for (let dayIndex = 1; dayIndex <= daysInMonth; dayIndex++) {
-        const th = document.createElement('th');
-        th.textContent = dayIndex;
-        tableHeaderRow.appendChild(th);
+      window.addEventListener('DOMContentLoaded', () => {
+        const dateInput = document.getElementById('date');
+
+        if (!dateInput.value) {
+          const today = new Date();
+          const year = today.getFullYear();
+          const month = String(today.getMonth() + 1).padStart(2, '0');
+          dateInput.value = `${year}-${month}`;
+        }
+
+        dateInput.addEventListener('change', updateTableHeaders);
+        updateTableHeaders();
+      });
+
+      function viewCapture(capturePath) {
+        window.open(capturePath, '_blank');
       }
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const dateInput = document.getElementById('date');
-
-      if (!dateInput.value) {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        dateInput.value = `${year}-${month}`;
-      }
-
-      dateInput.addEventListener('change', updateTableHeaders);
-      updateTableHeaders();
-    });
-
-    function viewCapture(capturePath) {
-      window.open(capturePath, '_blank');
-    }
-  </script>
+    </script>
 </head>
 <body>
 
@@ -59,55 +59,57 @@
 <nav th:replace="fragments/navbar :: navbar"></nav>
 
 <div class="container">
-  <div class="header">
-    <div>
-      <label for="date">Date:</label>
-      <input type="month" id="date" name="date" value="2024-10">
+    <div class="header">
+      <div>
+        <label for="date">Date:</label>
+        <input type="month" id="date" name="date" value="2024-10">
+      </div>
+      <div>
+        <a href="/search/detail" class="switching-btn">Display Switching</a>
+        <a href="/search/new" class="add-btn">+ Add New</a>
+      </div>
     </div>
-    <div>
-      <a href="/search/detail" class="switching-btn">Display Switching</a>
-      <a href="/search/new" class="add-btn">+ Add New</a>
-    </div>
-  </div>
 
-  <table>
-    <thead>
-    <tr>
-      <th>SEARCH KEYWORDS</th>
-      <th>DISPLAY KEYWORDS</th>
-      <th>PLATFORM</th>
-      <th>DEVICE</th>
-      <th>MATCH PATTERN</th>
-      <th th:each="day : ${#numbers.sequence(1, 31)}" th:text="${day}">Day</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="result : ${results}">
-      <td th:text="${result.searchKeyword}"></td>
-      <td th:text="${result.displayKeyword}"></td>
-      <td th:text="${result.platform}"></td>
-      <td th:text="${result.device}"></td>
-      <td th:text="${result.matchPattern}"></td>
+    <table>
+      <thead>
+      <tr>
+        <th>SEARCH KEYWORDS</th>
+        <th>DISPLAY KEYWORDS</th>
+        <th>PLATFORM</th>
+        <th>DEVICE</th>
+        <th>MATCH PATTERN</th>
+        <th th:each="day : ${#numbers.sequence(1, 31)}" th:text="${day}">Day</th>
+      </tr>
+      </thead>
+      <tbody>
+          <tr th:each="group : ${groupedResults}">
+            <td th:text="${group.searchKeyword}"></td>
+            <td th:text="${group.displayKeyword}"></td>
+            <td th:text="${group.platform}"></td>
+            <td th:text="${group.device}"></td>
+            <td th:text="${group.matchPattern}"></td>
 
-      <td th:each="day : ${#numbers.sequence(1, 31)}">
-        <div th:if="${#temporals.format(result.searchDate, 'dd') == day.toString()}">
-          <span th:if="${result.isMatch}">
-            <span class="icon-check">✔</span>
-          </span>
-          <span th:if="${!result.isMatch}">
-            <span class="no-match">-</span>
-          </span>
-        </div>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+            <td th:each="day : ${#numbers.sequence(1, 31)}">
+              <div th:if="${group.resultsByDay != null}">
+                <div th:each="result : ${group.resultsByDay[day.toString()]}">
+                  <span th:if="${result.isMatch}">
+                    <span class="icon-check">✔</span>
+                  </span>
+                  <span th:if="${!result.isMatch}">
+                    <span class="no-match">-</span>
+                  </span>
+                </div>
+              </div>
+            </td>
+
+          </tr>
+      </tbody>
+    </table>
 </div>
 
 <footer th:replace="fragments/footer :: footer"></footer>
 
 </body>
 </html>
-
 
 

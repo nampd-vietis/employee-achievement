@@ -81,37 +81,26 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="result : ${results}">
-                <td th:text="${result.searchKeyword}"></td>
-                <td th:text="${result.displayKeyword}"></td>
-                <td th:text="${result.platform}"></td>
-                <td th:text="${result.device}"></td>
-                <td th:text="${result.matchPattern}"></td>
+            <tr th:each="group : ${groupedResults}">
+                <td th:text="${group.searchKeyword}"></td>
+                <td th:text="${group.displayKeyword}"></td>
+                <td th:text="${group.platform}"></td>
+                <td th:text="${group.device}"></td>
+                <td th:text="${group.matchPattern}"></td>
 
                 <td th:each="day : ${#numbers.sequence(1, 31)}">
-                    <div th:if="${#temporals.format(result.searchDate, 'dd') == day.toString()}">
-                        <span class="icon_img">
-                            <a th:href="@{'/capture/' + ${result.capturePath}}">📷</a>
-                        </span>
-
-                        <br>
-
-                        <div th:if="${result.suggestionList != null}">
+                    <div th:if="${group.resultsByDay != null}">
+                        <div th:each="result : ${group.resultsByDay[day.toString()]}">
+                            <span class="icon_img">
+                                <a th:href="@{'/capture/' + ${result.capturePath}}">📷</a>
+                            </span>
+                            <br>
                             <div th:each="suggestion : ${result.suggestionList}">
-                                <div th:if="${suggestion.suggestText.length() > 0}">
-                                    <span th:text="${suggestion.suggestText}" th:class="${suggestion.isMatch ? 'text-red' : ''}"></span>
-                                </div>
-                                <div th:if="${suggestion.suggestText.length() <= 0}">
-                                    <span>Not found</span>
-                                </div>
+                                <span th:text="${suggestion.suggestText}" th:class="${suggestion.match ? 'text-red' : ''}"></span>
                             </div>
-                        </div>
-                        <div th:if="${result.suggestionList == null}">
-                            <span>No data</span>
                         </div>
                     </div>
                 </td>
-
             </tr>
         </tbody>
     </table>

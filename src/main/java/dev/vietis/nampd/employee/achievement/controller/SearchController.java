@@ -1,6 +1,6 @@
 package dev.vietis.nampd.employee.achievement.controller;
 
-import dev.vietis.nampd.employee.achievement.model.search.SearchResultResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +10,7 @@ import dev.vietis.nampd.employee.achievement.repository.search.SearchKeywordRepo
 import dev.vietis.nampd.employee.achievement.repository.search.SearchResultRepository;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/search")
@@ -54,23 +55,23 @@ public class SearchController {
 
     @GetMapping
     public String showSearchResults(Model model) {
-        List<SearchResultResponse> results = searchService.getSearchResults();
-        model.addAttribute("results", results);
+        List<Map<String, Object>> groupedResults = searchService.getSearchResultsGroupedBySearchKeywordAndDate();
+        model.addAttribute("groupedResults", groupedResults);
         return "suggest/suggest_results";
     }
 
     @GetMapping("/detail")
     public String showSearchResultsDetail(Model model) {
-        List<SearchResultResponse> results = searchService.getSearchResults();
-        model.addAttribute("results", results);
+        List<Map<String, Object>> groupedResults = searchService.getSearchResultsGroupedBySearchKeywordAndDate();
+        model.addAttribute("groupedResults", groupedResults);
         return "suggest/suggest_results_detail";
     }
 
-//    @GetMapping("/detail-json")
-//    @ResponseBody
-//    public ResponseEntity<?> showSearchResultsDetail() {
-//        List<SearchResultResponse> results = searchService.getSearchResults();
-//        return ResponseEntity.ok(results);
-//    }
+    @GetMapping("/detail-json")
+    @ResponseBody
+    public ResponseEntity<?> showSearchResultsDetailJson() {
+        List<Map<String, Object>> groupedResults = searchService.getSearchResultsGroupedBySearchKeywordAndDate();
+        return ResponseEntity.ok(groupedResults);
+    }
 }
 

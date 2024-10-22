@@ -5,14 +5,9 @@ import dev.vietis.nampd.employee.achievement.model.search.SearchResult;
 import dev.vietis.nampd.employee.achievement.model.search.SearchResultResponse;
 import dev.vietis.nampd.employee.achievement.repository.search.SearchKeywordRepository;
 import dev.vietis.nampd.employee.achievement.repository.search.SearchResultRepository;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 import ru.yandex.qatools.ashot.AShot;
 import ru.yandex.qatools.ashot.Screenshot;
@@ -20,43 +15,27 @@ import ru.yandex.qatools.ashot.Screenshot;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
 
 @Service
 public class SearchService {
+    private final WebDriverService webDriverService;
     private final SearchKeywordRepository searchKeywordRepository;
     private final SearchResultRepository searchResultRepository;
 
-    public SearchService(SearchKeywordRepository searchKeywordRepository, SearchResultRepository searchResultRepository) {
+    public SearchService(WebDriverService webDriverService, SearchKeywordRepository searchKeywordRepository, SearchResultRepository searchResultRepository) {
+        this.webDriverService = webDriverService;
         this.searchKeywordRepository = searchKeywordRepository;
         this.searchResultRepository = searchResultRepository;
     }
 
-    public WebDriver setupDriver(SearchKeyword.Device device) {
-        WebDriverManager.chromedriver().setup();
-        ChromeOptions options = new ChromeOptions();
-
-        if (device == SearchKeyword.Device.SMARTPHONE) {
-            // Giả lập mobile
-            Map<String, String> mobileEmulation = new HashMap<>();
-            mobileEmulation.put("deviceName", "Pixel 2");
-            options.setExperimentalOption("mobileEmulation", mobileEmulation);
-        }
-
-        return new ChromeDriver(options);
-    }
     public void searchAndSaveSuggestResults(SearchKeyword searchKeyword) {
-        WebDriver driver = setupDriver(searchKeyword.getDevice());
+        WebDriver driver = webDriverService.setupDriver(searchKeyword.getDevice());
         try {
-            String url = "";
+            String url;
             By searchBoxSelector;
-            String platform = searchKeyword.getPlatform().toString();
-            String keyword = searchKeyword.getSearchKeyword();
-            String displayKeyword = searchKeyword.getDisplayKeyword();
 
-            // Xác định URL và selector cho Google và Yahoo
             switch (searchKeyword.getPlatform()) {
                 case GOOGLE:
                     url = "https://www.google.com/";
@@ -70,37 +49,25 @@ public class SearchService {
                     throw new IllegalArgumentException("Unsupported platform: " + searchKeyword.getPlatform());
             }
 
-            // Mở trang tìm kiếm
             driver.get(url);
-            WebElement searchBox = driver.findElement(searchBoxSelector);
-            searchBox.sendKeys(keyword);
-
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("ul[role='listbox'] li")));
-            wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("ul[role='listbox'] li")));
-
-            List<WebElement> suggestions = driver.findElements(By.cssSelector("ul[role='listbox'] li"));
-
+            List<WebElement> suggestions = webDriverService.getSuggestions(driver, searchBoxSelector, searchKeyword.getSearchKeyword());
             String allSuggests = joinSuggestions(suggestions);
+
             boolean isMatch = false;
-
             for (WebElement suggestion : suggestions) {
-                String suggestText = suggestion.getText();
-
-                boolean match = checkMatchPattern(suggestText, displayKeyword, searchKeyword.getMatchPattern());
-                if (match) {
+                if (checkMatchPattern(suggestion.getText(), searchKeyword.getDisplayKeyword(), searchKeyword.getMatchPattern())) {
                     isMatch = true;
                     break;
                 }
             }
 
-            String fileName = captureScreenshot(driver, keyword, platform, searchKeyword.getDevice());
-
+            String fileName = captureScreenshot(driver, searchKeyword.getSearchKeyword(), searchKeyword.getPlatform().toString(), searchKeyword.getDevice());
             saveSearchResult(allSuggests, isMatch, fileName, searchKeyword);
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            driver.quit();
+            webDriverService.closeDriver(driver);
         }
     }
 
@@ -108,20 +75,6 @@ public class SearchService {
         if (pattern == SearchKeyword.MatchPattern.PARTIAL && suggestText.toLowerCase().contains(displayKeyword.toLowerCase())) {
             return true;
         } else return pattern == SearchKeyword.MatchPattern.UNANIMOUS && suggestText.equalsIgnoreCase(displayKeyword);
-    }
-
-    public String captureScreenshot(WebDriver driver, String keyword, String platform, SearchKeyword.Device device) throws Exception {
-        String destinationPath = "src/main/resources/static/capture/";
-        String deviceType = device == SearchKeyword.Device.SMARTPHONE ? "mobile" : "pc";
-        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String fileName = keyword + "_" + platform + "_" + deviceType + "_suggest_" + timestamp + ".png";
-
-        String filePath = destinationPath + fileName;
-
-        Screenshot screenshot = new AShot().takeScreenshot(driver);
-        ImageIO.write(screenshot.getImage(), "PNG", new File(filePath));
-
-        return fileName;
     }
 
     public String joinSuggestions(List<WebElement> suggestions) {
@@ -132,9 +85,8 @@ public class SearchService {
             allSuggests.append(suggestText).append("; ");
         }
 
-        // Xóa "; " cuối cùng
         if (!allSuggests.isEmpty()) {
-            allSuggests.setLength(allSuggests.length() - 2);
+            allSuggests.setLength(allSuggests.length() - 2); // Xóa "; " cuối cùng
         }
 
         return allSuggests.toString();
@@ -153,7 +105,6 @@ public class SearchService {
         } else {
             result = new SearchResult();
             result.setSearchKeyword(searchKeyword);
-
             result.setCapturePath(capturePath);
             result.setSuggestions(allSuggests);
             result.setMatch(isMatch);
@@ -163,29 +114,48 @@ public class SearchService {
         searchResultRepository.save(result);
     }
 
-    public List<SearchResultResponse> getSearchResults() {
+    public List<Map<String, Object>> getSearchResultsGroupedBySearchKeywordAndDate() {
         List<SearchResult> results = searchResultRepository.findAll();
-        List<SearchResultResponse> responseList = new ArrayList<>();
+        Map<SearchKeyword, Map<LocalDate, List<SearchResultResponse>>> groupedResults = new HashMap<>();
 
         for (SearchResult result : results) {
-            SearchResultResponse response = new SearchResultResponse();
+            SearchKeyword searchKeywordObj = result.getSearchKeyword();
+            LocalDate searchDate = result.getSearchDate();
 
-            response.setSearchKeyword(result.getSearchKeyword().getSearchKeyword());
-            response.setDisplayKeyword(result.getSearchKeyword().getDisplayKeyword());
+            SearchResultResponse response = new SearchResultResponse();
             response.setCapturePath(result.getCapturePath());
-            response.setPlatform(result.getSearchKeyword().getPlatform().toString());
-            response.setDevice(result.getSearchKeyword().getDevice().toString());
-            response.setMatchPattern(result.getSearchKeyword().getMatchPattern().toString());
             response.setSearchDate(result.getSearchDate());
             response.setMatch(result.isMatch());
 
-            List<SearchResultResponse.Suggestion> suggestionList = parseSuggestions(result.getSuggestions(), result.getSearchKeyword().getDisplayKeyword(), result.getSearchKeyword().getMatchPattern());
+            List<SearchResultResponse.Suggestion> suggestionList = parseSuggestions(result.getSuggestions(), searchKeywordObj.getDisplayKeyword(), searchKeywordObj.getMatchPattern());
             response.setSuggestionList(suggestionList);
 
-            responseList.add(response);
+            groupedResults.computeIfAbsent(searchKeywordObj, k -> new HashMap<>())
+                    .computeIfAbsent(searchDate, k -> new ArrayList<>())
+                    .add(response);
         }
 
-        return responseList;
+        List<Map<String, Object>> groupedResponseList = new ArrayList<>();
+        for (Map.Entry<SearchKeyword, Map<LocalDate, List<SearchResultResponse>>> keywordEntry : groupedResults.entrySet()) {
+            SearchKeyword searchKeywordObj = keywordEntry.getKey();
+            Map<String, Object> keywordGroup = new HashMap<>();
+
+            keywordGroup.put("searchKeyword", searchKeywordObj.getSearchKeyword());
+            keywordGroup.put("displayKeyword", searchKeywordObj.getDisplayKeyword());
+            keywordGroup.put("platform", searchKeywordObj.getPlatform().toString());
+            keywordGroup.put("matchPattern", searchKeywordObj.getMatchPattern().toString());
+            keywordGroup.put("device", searchKeywordObj.getDevice().toString());
+
+            Map<String, List<SearchResultResponse>> resultsByDay = new HashMap<>();
+            for (Map.Entry<LocalDate, List<SearchResultResponse>> dateEntry : keywordEntry.getValue().entrySet()) {
+                resultsByDay.put(String.valueOf(dateEntry.getKey().getDayOfMonth()), dateEntry.getValue());
+            }
+
+            keywordGroup.put("resultsByDay", resultsByDay);
+            groupedResponseList.add(keywordGroup);
+        }
+
+        return groupedResponseList;
     }
 
     private List<SearchResultResponse.Suggestion> parseSuggestions(String suggestions, String displayKeyword, SearchKeyword.MatchPattern pattern) {
@@ -208,20 +178,17 @@ public class SearchService {
 
         return suggestionList;
     }
+    public String captureScreenshot(WebDriver driver, String keyword, String platform, SearchKeyword.Device device) throws Exception {
+        String destinationPath = "src/main/resources/static/capture/";
+        String deviceType = device == SearchKeyword.Device.SMARTPHONE ? "mobile" : "pc";
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String fileName = keyword + "_" + platform + "_" + deviceType + "_suggest_" + timestamp + ".png";
 
-    private List<String> filterMainSuggestions(List<WebElement> suggestions) {
-        List<String> mainSuggestions = new ArrayList<>();
+        String filePath = destinationPath + fileName;
 
-        for (WebElement suggestion : suggestions) {
-            List<WebElement> subSuggestionElements = suggestion.findElements(By.cssSelector(".sub-suggestion-class")); // Thay thế bằng lớp CSS thực tế của sub-suggestions
+        Screenshot screenshot = new AShot().takeScreenshot(driver);
+        ImageIO.write(screenshot.getImage(), "PNG", new File(filePath));
 
-            if (subSuggestionElements.isEmpty()) {
-                String suggestText = suggestion.getText();
-                mainSuggestions.add(suggestText);
-            }
-        }
-
-        return mainSuggestions;
+        return fileName;
     }
 }
-
