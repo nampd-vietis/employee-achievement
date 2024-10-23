@@ -18,17 +18,25 @@
 
             const tableHeaderRow = document.querySelector('table thead tr');
 
-            // Xóa các thẻ <th> hiện tại sau cột thứ 4
             while (tableHeaderRow.children.length > 5) {
                 tableHeaderRow.removeChild(tableHeaderRow.lastChild);
             }
 
-            // Thêm các thẻ <th> tương ứng với số ngày của tháng
             for (let dayIndex = 1; dayIndex <= daysInMonth; dayIndex++) {
                 const th = document.createElement('th');
                 th.textContent = dayIndex;
                 tableHeaderRow.appendChild(th);
             }
+        }
+
+        //gửi yêu cầu đến server với year + month khi chọn
+        function updateDataByMonthYear() {
+            const dateInput = document.getElementById('date');
+            const selectedMonthYear = dateInput.value;
+            const [year, month] = selectedMonthYear.split('-');
+
+            // Gửi request với year và month
+            window.location.href = `/search/detail?year=${year}&month=${month}`;
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -43,12 +51,16 @@
 
             dateInput.addEventListener('change', updateTableHeaders);
             updateTableHeaders();
+
+            dateInput.addEventListener('change', updateDataByMonthYear);
         });
 
+        // Hàm mở ảnh chụp theo đường dẫn
         function viewCapture(capturePath) {
             window.open(capturePath, '_blank');
         }
     </script>
+
 </head>
 <body>
 <!-- Header -->
@@ -61,7 +73,8 @@
     <div class="header">
         <div>
             <label for="date">Date:</label>
-            <input type="month" id="date" name="date" value="2024-10">
+            <input type="month" id="date" name="date"
+                   th:value="${year != null and month != null ? year + '-' + (month < 10 ? '0' : '') + month : ''}">
         </div>
         <div>
             <a href="/search" class="switching-btn">Display Switching</a>
@@ -71,49 +84,56 @@
 
     <table>
         <thead>
-            <tr>
-                <th>SEARCH KEYWORDS</th>
-                <th>DISPLAY KEYWORDS</th>
-                <th>PLATFORM</th>
-                <th>DEVICE</th>
-                <th>MATCH PATTERN</th>
-                <th th:each="day : ${#numbers.sequence(1, 31)}" th:text="${day}">Day</th>
-            </tr>
+        <tr>
+            <th>SEARCH KEYWORDS</th>
+            <th>DISPLAY KEYWORDS</th>
+            <th>PLATFORM</th>
+            <th>DEVICE</th>
+            <th>MATCH PATTERN</th>
+            <th th:each="day : ${#numbers.sequence(1, 31)}" th:text="${day}">Day</th>
+        </tr>
         </thead>
         <tbody>
-            <tr th:each="group : ${groupedResults}">
-                <td th:text="${group.searchKeyword}"></td>
-                <td th:text="${group.displayKeyword}"></td>
-                <td th:text="${group.platform}"></td>
-                <td th:text="${group.device}"></td>
-                <td th:text="${group.matchPattern}"></td>
+        <tr th:each="group : ${groupedResults}">
+            <!-- Các cột khác vẫn hiển thị dữ liệu đầy đủ -->
+            <td th:text="${group.searchKeyword}"></td>
+            <td th:text="${group.displayKeyword}"></td>
+            <td th:text="${group.platform}"></td>
+            <td th:text="${group.device}"></td>
+            <td th:text="${group.matchPattern}"></td>
 
-                <td th:each="day : ${#numbers.sequence(1, 31)}">
-                    <div th:if="${group.resultsByDay != null}">
-                        <div th:each="result : ${group.resultsByDay[day.toString()]}">
-                            <span class="icon_img">
-                                <a th:href="@{'/capture/' + ${result.capturePath}}">📷</a>
-                            </span>
-                            <br>
-                            <div th:each="suggestion : ${result.suggestionList}">
-                                <span th:text="${suggestion.suggestText}" th:class="${suggestion.match ? 'text-red' : ''}"></span>
-                            </div>
+            <td th:each="day : ${#numbers.sequence(1, 31)}">
+                <div th:if="${group.resultsByDay != null}">
+                    <div th:each="result : ${group.resultsByDay[day.toString()]}">
+                    <span th:if="${result != null}">
+                        <span class="icon_img">
+                            <a th:href="@{'/capture/' + ${result.capturePath}}">📷</a>
+                        </span>
+                        <br>
+                        <div th:each="suggestion : ${result.suggestionList}">
+                            <span th:text="${suggestion.suggestText}" th:class="${suggestion.match ? 'text-red' : ''}"></span>
                         </div>
+                    </span>
+                        <span th:if="${result == null}"></span>
                     </div>
-                </td>
-            </tr>
+                </div>
+                <div th:if="${group.resultsByDay == null || group.resultsByDay[day.toString()] == null}"></div>
+            </td>
+        </tr>
         </tbody>
+
     </table>
 </div>
 
+<!-- Footer -->
 <footer th:replace="fragments/footer :: footer"></footer>
 
-</body>
 <script>
     var results = /*[[${results}]]*/ '[]';
-    console.log(results, "daaa out");
+    console.log(results, "Results fetched");
 </script>
-</html>
 
+</body>
+</html>
 
 

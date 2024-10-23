@@ -9,6 +9,7 @@ import dev.vietis.nampd.employee.achievement.service.SearchService;
 import dev.vietis.nampd.employee.achievement.repository.search.SearchKeywordRepository;
 import dev.vietis.nampd.employee.achievement.repository.search.SearchResultRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -54,23 +55,59 @@ public class SearchController {
     }
 
     @GetMapping
-    public String showSearchResults(Model model) {
-        List<Map<String, Object>> groupedResults = searchService.getSearchResultsGroupedBySearchKeywordAndDate();
+    public String showSearchResults(@RequestParam(value = "year", required = false) Integer year,
+                                    @RequestParam(value = "month", required = false) Integer month,
+                                    Model model) {
+
+        LocalDate today = LocalDate.now();
+        if (year == null) {
+            year = today.getYear();
+        }
+        if (month == null) {
+            month = today.getMonthValue();
+        }
+
+        List<Map<String, Object>> groupedResults = searchService.getSearchResultsGroupedBySearchKeywordAndDate(year, month);
+        model.addAttribute("year", year);
+        model.addAttribute("month", month);
         model.addAttribute("groupedResults", groupedResults);
         return "suggest/suggest_results";
     }
 
     @GetMapping("/detail")
-    public String showSearchResultsDetail(Model model) {
-        List<Map<String, Object>> groupedResults = searchService.getSearchResultsGroupedBySearchKeywordAndDate();
+    public String showSearchResultsDetail(@RequestParam(value = "year", required = false) Integer year,
+                                          @RequestParam(value = "month", required = false) Integer month,
+                                          Model model) {
+
+        LocalDate today = LocalDate.now();
+        if (year == null) {
+            year = today.getYear();
+        }
+        if (month == null) {
+            month = today.getMonthValue();
+        }
+
+        List<Map<String, Object>> groupedResults = searchService.getSearchResultsGroupedBySearchKeywordAndDate(year, month);
+
         model.addAttribute("groupedResults", groupedResults);
+        model.addAttribute("year", year);
+        model.addAttribute("month", month);
         return "suggest/suggest_results_detail";
     }
 
     @GetMapping("/detail-json")
     @ResponseBody
-    public ResponseEntity<?> showSearchResultsDetailJson() {
-        List<Map<String, Object>> groupedResults = searchService.getSearchResultsGroupedBySearchKeywordAndDate();
+    public ResponseEntity<?> showSearchResultsDetailJson(@RequestParam(value = "year", required = false) Integer year,
+                                                         @RequestParam(value = "month", required = false) Integer month) {
+        LocalDate today = LocalDate.now();
+        if (year == null) {
+            year = today.getYear();
+        }
+        if (month == null) {
+            month = today.getMonthValue();
+        }
+
+        List<Map<String, Object>> groupedResults = searchService.getSearchResultsGroupedBySearchKeywordAndDate(year, month);
         return ResponseEntity.ok(groupedResults);
     }
 }

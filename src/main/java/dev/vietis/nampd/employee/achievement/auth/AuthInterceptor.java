@@ -28,10 +28,10 @@ public class AuthInterceptor implements HandlerInterceptor {
             return false;
         }
 
-//        if ((uri.startsWith("/search/new") || uri.startsWith("/search/perform")) && employee.getRole() != Employee.Role.ADMIN) {
-//            response.sendRedirect("/access-denied");
-//            return false;
-//        }
+        if ((uri.startsWith("/search/new") || uri.startsWith("/search/perform")) && employee.getRole() != Employee.Role.ADMIN) {
+            response.sendRedirect("/access-denied");
+            return false;
+        }
 
         return true;
     }

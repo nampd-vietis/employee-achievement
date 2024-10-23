@@ -18,14 +18,13 @@ public class SearchScheduler {
         this.searchKeywordRepository = searchKeywordRepository;
     }
 
-    // Lên lịch chạy mỗi ngày lúc 9h30 sáng
-//    @Scheduled(cron = "0 30 9 * * *")
+    // Lên lịch chạy mỗi ngày lúc 9h sáng
+    @Scheduled(cron = "0 0 9 * * *")
 //    @Scheduled(cron = "0 */3 * * * *")
     public void scheduleDailySearch()
     {
         System.out.println("Scheduled Search Running...");
 
-        // Lấy tất cả từ khóa từ cơ sở dữ liệu
         List<SearchKeyword> keywords = searchKeywordRepository.findAll();
 
         if (keywords.isEmpty()) {

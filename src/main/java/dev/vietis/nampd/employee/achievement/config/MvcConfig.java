@@ -25,8 +25,8 @@ public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
-                .addPathPatterns("/admin/**", "/user/**")
-//                .addPathPatterns("/admin/**", "/user/**", "/search/**")
+                .addPathPatterns("/admin/**", "/user/**", "/search/**")
+//                .addPathPatterns("/admin/**", "/user/**")
                 .excludePathPatterns("/login", "/logout");
 
         registry.addInterceptor(localeChangeInterceptor());

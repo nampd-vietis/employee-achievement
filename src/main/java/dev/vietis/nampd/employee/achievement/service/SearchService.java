@@ -85,8 +85,9 @@ public class SearchService {
             allSuggests.append(suggestText).append("; ");
         }
 
+        // Xóa "; " cuối cùng
         if (!allSuggests.isEmpty()) {
-            allSuggests.setLength(allSuggests.length() - 2); // Xóa "; " cuối cùng
+            allSuggests.setLength(allSuggests.length() - 2);
         }
 
         return allSuggests.toString();
@@ -114,25 +115,31 @@ public class SearchService {
         searchResultRepository.save(result);
     }
 
-    public List<Map<String, Object>> getSearchResultsGroupedBySearchKeywordAndDate() {
+    public List<Map<String, Object>> getSearchResultsGroupedBySearchKeywordAndDate(int year, int month) {
         List<SearchResult> results = searchResultRepository.findAll();
         Map<SearchKeyword, Map<LocalDate, List<SearchResultResponse>>> groupedResults = new HashMap<>();
 
         for (SearchResult result : results) {
-            SearchKeyword searchKeywordObj = result.getSearchKeyword();
             LocalDate searchDate = result.getSearchDate();
+            SearchKeyword searchKeywordObj = result.getSearchKeyword();
 
-            SearchResultResponse response = new SearchResultResponse();
-            response.setCapturePath(result.getCapturePath());
-            response.setSearchDate(result.getSearchDate());
-            response.setMatch(result.isMatch());
+            if (searchDate.getYear() == year && searchDate.getMonthValue() == month) {
+                SearchResultResponse response = new SearchResultResponse();
+                response.setCapturePath(result.getCapturePath());
+                response.setSearchDate(result.getSearchDate());
+                response.setMatch(result.isMatch());
 
-            List<SearchResultResponse.Suggestion> suggestionList = parseSuggestions(result.getSuggestions(), searchKeywordObj.getDisplayKeyword(), searchKeywordObj.getMatchPattern());
-            response.setSuggestionList(suggestionList);
+                List<SearchResultResponse.Suggestion> suggestionList = parseSuggestions(result.getSuggestions(), searchKeywordObj.getDisplayKeyword(), searchKeywordObj.getMatchPattern());
+                response.setSuggestionList(suggestionList);
 
-            groupedResults.computeIfAbsent(searchKeywordObj, k -> new HashMap<>())
-                    .computeIfAbsent(searchDate, k -> new ArrayList<>())
-                    .add(response);
+                // Thêm kết quả vào groupedResults theo ngày
+                groupedResults.computeIfAbsent(searchKeywordObj, k -> new HashMap<>())
+                        .computeIfAbsent(searchDate, k -> new ArrayList<>())
+                        .add(response);
+            } else {
+                // Nếu không có kết quả trong tháng, tạo đối tượng với resultsByDay rỗng
+                groupedResults.computeIfAbsent(searchKeywordObj, k -> new HashMap<>());
+            }
         }
 
         List<Map<String, Object>> groupedResponseList = new ArrayList<>();
@@ -152,11 +159,13 @@ public class SearchService {
             }
 
             keywordGroup.put("resultsByDay", resultsByDay);
+
             groupedResponseList.add(keywordGroup);
         }
 
         return groupedResponseList;
     }
+
 
     private List<SearchResultResponse.Suggestion> parseSuggestions(String suggestions, String displayKeyword, SearchKeyword.MatchPattern pattern) {
         List<SearchResultResponse.Suggestion> suggestionList = new ArrayList<>();
