@@ -47,53 +47,32 @@ public class DepartmentController {
 
     // Xử lý tạo mới
     @PostMapping
-    public String createDepartment(@ModelAttribute("department") DepartmentDTO departmentDto, Model model) {
-        try {
-            departmentService.createDepartment(departmentDto);
-            return "redirect:/admin/departments";
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", "Phòng ban đã tồn tại");
-            return "department/add_form";
-        }
+    public String createDepartment(@ModelAttribute("department") DepartmentDTO departmentDTO) {
+        departmentService.createDepartment(departmentDTO);
+        return "redirect:/admin/departments";
     }
 
     // Hiển thị form chỉnh sửa
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
-        try {
-            DepartmentDTO department = departmentService.getDepartmentById(id);
-            model.addAttribute("department", department);
-            return "department/update_form"; // Trả về view form chỉnh sửa phòng ban
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", "Phòng ban không tồn tại");
-            return "error"; // Trả về view lỗi
-        }
+        DepartmentDTO department = departmentService.getDepartmentById(id);
+        model.addAttribute("department", department);
+        return "department/update_form";
     }
 
     // Xử lý chỉnh sửa
     @PostMapping("/update/{id}")
     public String updateDepartment(@PathVariable Long id,
-                                   @ModelAttribute("department") DepartmentDTO departmentDTO,
-                                   Model model) {
-        try {
-            departmentService.updateDepartment(id, departmentDTO);
-            return "redirect:/admin/departments";
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", "Phòng ban không tồn tại");
-            return "department/update_form";
-        }
+                                   @ModelAttribute("department") DepartmentDTO departmentDTO) {
+        departmentService.updateDepartment(id, departmentDTO);
+        return "redirect:/admin/departments";
     }
 
     // Xóa phòng ban
     @PostMapping("/delete/{id}")
     public String deleteDepartment(@PathVariable Long id, Model model) {
-        try {
-            departmentService.deleteDepartment(id);
-            return "redirect:/admin/departments";
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", "Phòng ban không tồn tại.");
-            return "error"; // Trả về view lỗi
-        }
+        departmentService.deleteDepartment(id);
+        return "redirect:/admin/departments";
     }
 
 //    // Xem danh sách nhân viên thuộc phòng ban

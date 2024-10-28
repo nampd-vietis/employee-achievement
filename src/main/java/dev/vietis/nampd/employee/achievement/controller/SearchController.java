@@ -41,17 +41,11 @@ public class SearchController {
 
     @PostMapping("/perform")
     public String performSearch(@RequestParam Long keywordId) {
-        try {
-            SearchKeyword keyword = searchKeywordRepository.findById(keywordId)
-                    .orElseThrow(() -> new IllegalArgumentException("Keyword not found"));
+        SearchKeyword keyword = searchKeywordRepository.findById(keywordId)
+                .orElseThrow(() -> new IllegalArgumentException("Keyword not found"));
 
-            searchService.searchAndSaveSuggestResults(keyword);
-            return "redirect:/search";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "Failed to perform search for this keyword";
-        }
-
+        searchService.searchAndSaveSuggestResults(keyword);
+        return "redirect:/search";
     }
 
     @GetMapping

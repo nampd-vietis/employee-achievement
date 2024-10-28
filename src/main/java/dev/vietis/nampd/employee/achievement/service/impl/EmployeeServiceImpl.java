@@ -1,5 +1,7 @@
 package dev.vietis.nampd.employee.achievement.service.impl;
 
+import dev.vietis.nampd.employee.achievement.exception.AppException;
+import dev.vietis.nampd.employee.achievement.exception.ErrorCode;
 import dev.vietis.nampd.employee.achievement.mapper.EmployeeMapper;
 import dev.vietis.nampd.employee.achievement.model.dto.AccountDTO;
 import dev.vietis.nampd.employee.achievement.model.dto.EmployeeDTO;
@@ -39,11 +41,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = employeeMapper.toEmployee(employeeDto);
 
         if (employeeRepository.existsByEmail(employee.getEmail())) {
-            throw new RuntimeException("Email đã tồn tại: " + employee.getEmail());
+            throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
 
         Department department = departmentRepository.findByDepartmentName(employeeDto.getDepartmentName())
-                .orElseThrow(() -> new NoSuchElementException("Department not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.DEPARTMENT_NOT_FOUND));
 
         employee.setDepartment(department);
         employeeRepository.save(employee);
@@ -67,30 +69,30 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDTO getEmployeeById(Long id) {
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Employee not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND));
         return employeeMapper.toEmployeeDto(employee);
     }
 
     @Override
     public Optional<Employee> findById(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new NoSuchElementException("Employee not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND));
         return Optional.ofNullable(employee);
     }
 
     @Override
     public void updateEmployee(Long id, EmployeeDTO updatedEmployeeDTO, MultipartFile imgFile) {
         Employee existingEmployee = employeeRepository.findById(updatedEmployeeDTO.getId())
-                .orElseThrow(() -> new NoSuchElementException("Employee not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND));
 
         existingEmployee.setFullName(updatedEmployeeDTO.getFullName());
         existingEmployee.setGender(Employee.Gender.valueOf(updatedEmployeeDTO.getGender()));
 
         // Kiểm tra và xử lý ảnh mới
         if (imgFile != null && !imgFile.isEmpty() && !Objects.requireNonNull(imgFile.getOriginalFilename()).isEmpty()) {
-            String newImgFilename = fileStorageService.save(imgFile);  // Lưu file mới
-            updatedEmployeeDTO.setPhoto(newImgFilename);               // Cập nhật đường dẫn file mới
-            existingEmployee.setPhoto(newImgFilename);                 // Cập nhật ảnh cho nhân viên
+            String newImgFilename = fileStorageService.save(imgFile);
+            updatedEmployeeDTO.setPhoto(newImgFilename);
+            existingEmployee.setPhoto(newImgFilename);
         }
 
         existingEmployee.setBirthday(updatedEmployeeDTO.getBirthday());
@@ -103,7 +105,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         existingEmployee.setRole(Employee.Role.valueOf(updatedEmployeeDTO.getRole()));
 
         Department department = departmentRepository.findByDepartmentName(updatedEmployeeDTO.getDepartmentName())
-                .orElseThrow(() -> new NoSuchElementException("Department not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.DEPARTMENT_NOT_FOUND));
 
         existingEmployee.setDepartment(department);
 
@@ -113,7 +115,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void deleteEmployee(Long employeeId) {
         if (!employeeRepository.existsById(employeeId)) {
-            throw new NoSuchElementException("Employee not found");
+            throw new AppException(ErrorCode.EMPLOYEE_NOT_FOUND);
         }
         employeeRepository.deleteById(employeeId);
     }
@@ -156,9 +158,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     // Tạo tài khoản cho một nhân viên
     @Override
     public void createAccount(AccountDTO accountDTO) {
-        log.info("data e: {}" , accountDTO.getEmployeeId());
         Employee employee = employeeRepository.findById(accountDTO.getEmployeeId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid employee Id:" + accountDTO.getEmployeeId()));
+                .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND));
 
         // Gán email và mã hóa mật khẩu vào Employee
         employee.setEmail(accountDTO.getEmail());
@@ -171,7 +172,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void updateAccount(Long employeeId, AccountDTO accountDTO) {
         Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid employee Id:" + employeeId));
+                .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND));
 
         employee.setEmail(accountDTO.getEmail());
         employee.setPassword((accountDTO.getPassword()));
@@ -183,7 +184,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void deleteAccount(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid employee Id:" + employeeId));
+                .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND));
 
         // Xóa password
         employee.setPassword(null);

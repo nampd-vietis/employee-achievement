@@ -28,21 +28,16 @@ public class LoginController {
     public String login(@ModelAttribute EmployeeLoginDTO employeeLoginDTO,
                         Model model,
                         HttpSession session) {
-        try {
-            Employee employee = loginService.login(employeeLoginDTO.getEmail(), employeeLoginDTO.getPassword());
 
-            session.setAttribute("loggedInEmployee", employee);
+        Employee employee = loginService.login(employeeLoginDTO.getEmail(), employeeLoginDTO.getPassword());
 
-            if (employee.getRole() == Employee.Role.ADMIN) {
-                return "redirect:/admin/home";
-            } else {
-                return "redirect:/user/home";
-            }
-        } catch (RuntimeException e) {
-            model.addAttribute("error", "Email hoặc mật khẩu không chính xác");
-            return "login";
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        // Lưu thông tin đăng nhập vào session
+        session.setAttribute("loggedInEmployee", employee);
+
+        if (employee.getRole() == Employee.Role.ADMIN) {
+            return "redirect:/admin/home";
+        } else {
+            return "redirect:/user/home";
         }
     }
 

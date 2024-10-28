@@ -1,5 +1,7 @@
 package dev.vietis.nampd.employee.achievement.service.impl;
 
+import dev.vietis.nampd.employee.achievement.exception.AppException;
+import dev.vietis.nampd.employee.achievement.exception.ErrorCode;
 import dev.vietis.nampd.employee.achievement.mapper.DepartmentMapper;
 import dev.vietis.nampd.employee.achievement.model.dto.DepartmentDTO;
 import dev.vietis.nampd.employee.achievement.model.entity.Department;
@@ -26,7 +28,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public void createDepartment(DepartmentDTO departmentDto) {
         if (departmentRepository.existsByDepartmentName(departmentDto.getDepartmentName())) {
-            throw new IllegalArgumentException("Department already exists");
+            throw new AppException(ErrorCode.DEPARTMENT_ALREADY_EXISTS);
         }
 
         Department department = departmentMapper.toDepartment(departmentDto);
@@ -46,21 +48,14 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentDTO getDepartmentById(Long departmentId) {
         Department department = departmentRepository.findById(departmentId)
-                .orElseThrow(() -> new IllegalArgumentException("Department not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.DEPARTMENT_NOT_FOUND));
         return departmentMapper.toDepartmentDto(department);
     }
-
-//    @Override
-//    public DepartmentDTO getDepartmentByName(String name) {
-//        Department department = departmentRepository.findByDepartmentName(name)
-//                .orElseThrow(() -> new IllegalArgumentException("Department not found"));
-//        return departmentMapper.toDepartmentDto(department);
-//    }
 
     @Override
     public void updateDepartment(Long departmentId, DepartmentDTO updatedDepartmentDTO) {
         Department existingDepartment = departmentRepository.findById(departmentId)
-                .orElseThrow(() -> new IllegalArgumentException("Department not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.DEPARTMENT_NOT_FOUND));
         existingDepartment.setDepartmentName(updatedDepartmentDTO.getDepartmentName());
 
         Department updatedDepartment = departmentRepository.save(existingDepartment);
@@ -69,12 +64,10 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public void deleteDepartment(Long departmentId) {
-        Optional<Department> existingDepartment = departmentRepository.findById(departmentId);
-        if (existingDepartment.isPresent()) {
-            departmentRepository.deleteById(departmentId);
-        } else {
-            throw new NoSuchElementException("Department not found with id: " + departmentId);
-        }
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new AppException(ErrorCode.DEPARTMENT_NOT_FOUND));
+
+        departmentRepository.delete(department);
     }
 
 //    @Override

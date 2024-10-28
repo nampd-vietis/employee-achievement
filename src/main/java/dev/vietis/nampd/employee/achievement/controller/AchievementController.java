@@ -52,35 +52,23 @@ public class AchievementController {
     // Hiển thị form chỉnh sửa
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
-        try {
-            Achievement achievement = achievementService.getAchievementById(id);
-            model.addAttribute("achievement", achievement);
+        Achievement achievement = achievementService.getAchievementById(id);
+        model.addAttribute("achievement", achievement);
 
-            // Thêm danh sách nv vào model
-            List<EmployeeDTO> employeeDTOS = employeeService.getAllEmployees();
-            model.addAttribute("employees", employeeDTOS);
+        // Thêm danh sách nv vào model
+        List<EmployeeDTO> employeeDTOS = employeeService.getAllEmployees();
+        model.addAttribute("employees", employeeDTOS);
 
-            return "achievement/update_form";
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", "Thành tích không tồn tại");
-            return "error";
-        }
+        return "achievement/update_form";
     }
 
     @PostMapping("/update/{id}")
     public String updateAchievement(@PathVariable Long id,
-                                   @ModelAttribute("achievement") Achievement achievement,
-                                   Model model) {
-        try {
-            achievementService.updateAchievement(id, achievement);
-            return "redirect:/admin/achievements";
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", "Achievement không tồn tại");
-            return "achievement/update_form";
-        }
+                                   @ModelAttribute("achievement") Achievement achievement) {
+        achievementService.updateAchievement(id, achievement);
+        return "redirect:/admin/achievements";
     }
 
-    // Xóa phòng ban
     @PostMapping("/delete/{id}")
     public String deleteAchievement(@PathVariable Long id) {
         achievementService.deleteAchievement(id);

@@ -1,5 +1,7 @@
 package dev.vietis.nampd.employee.achievement.controller;
 
+import dev.vietis.nampd.employee.achievement.exception.AppException;
+import dev.vietis.nampd.employee.achievement.exception.ErrorCode;
 import dev.vietis.nampd.employee.achievement.model.dto.AccountDTO;
 import dev.vietis.nampd.employee.achievement.model.entity.Employee;
 import dev.vietis.nampd.employee.achievement.service.EmployeeService;
@@ -59,7 +61,7 @@ public class AccountController {
     @GetMapping("/edit/{employeeId}")
     public String editAccountForm(@PathVariable Long employeeId, Model model) {
         Employee employee = employeeService.findById(employeeId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid employee Id:" + employeeId));
+                .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND));
 
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.setEmail(employee.getEmail());

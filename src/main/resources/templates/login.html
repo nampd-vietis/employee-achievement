@@ -34,7 +34,7 @@
 
     <!-- Hiển thị thông báo lỗi nếu có -->
     <div class="error-message" th:if="${error}">
-      <p th:text="#{login.error} + ': ' + ${error}" style="color:red;"></p>
+      <p th:text="${error}" style="color:red;"></p>
     </div>
   </form>
 </div>

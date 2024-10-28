@@ -1,5 +1,7 @@
 package dev.vietis.nampd.employee.achievement.service.impl;
 
+import dev.vietis.nampd.employee.achievement.exception.AppException;
+import dev.vietis.nampd.employee.achievement.exception.ErrorCode;
 import dev.vietis.nampd.employee.achievement.model.dto.DepartmentAchievementsSumDTO;
 import dev.vietis.nampd.employee.achievement.model.dto.EmployeeAchievementsSumDTO;
 import dev.vietis.nampd.employee.achievement.model.entity.Achievement;
@@ -31,7 +33,7 @@ public class AchievementServiceImpl implements AchievementService {
     @Override
     public Achievement createAchievement(Achievement achievement) {
         Employee employee = employeeRepository.findById(achievement.getEmployee().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND));
 
         achievement.setEmployee(employee);
 
@@ -56,20 +58,20 @@ public class AchievementServiceImpl implements AchievementService {
     @Override
     public Achievement getAchievementById(Long achievementId) {
         return achievementRepository.findById(achievementId)
-                .orElseThrow(() -> new IllegalArgumentException("Achievement not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.ACHIEVEMENT_NOT_FOUND));
     }
 
     @Override
     public Achievement updateAchievement(Long achievementId, Achievement updatedAchievement) {
         Achievement existingAchievement = achievementRepository.findById(achievementId)
-                .orElseThrow(() -> new NoSuchElementException("Achievement not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.ACHIEVEMENT_NOT_FOUND));
 
         existingAchievement.setType(updatedAchievement.getType());
         existingAchievement.setReason(updatedAchievement.getReason());
         existingAchievement.setDateRecorded(updatedAchievement.getDateRecorded());
 
         Employee employee = employeeRepository.findById(updatedAchievement.getEmployee().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND));
         existingAchievement.setEmployee(employee);
 
         return achievementRepository.save(existingAchievement);
@@ -78,7 +80,7 @@ public class AchievementServiceImpl implements AchievementService {
     @Override
     public void deleteAchievement(Long achievementId) {
         if (!achievementRepository.existsById(achievementId)) {
-            throw new NoSuchElementException("Achievement not found");
+            throw new AppException(ErrorCode.ACHIEVEMENT_NOT_FOUND);
         }
         achievementRepository.deleteById(achievementId);
     }

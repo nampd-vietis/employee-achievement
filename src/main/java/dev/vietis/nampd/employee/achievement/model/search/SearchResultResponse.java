@@ -1,16 +1,17 @@
 package dev.vietis.nampd.employee.achievement.model.search;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchResultResponse {
     private String capturePath;
     private boolean isMatch;

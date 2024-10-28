@@ -43,7 +43,6 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
     }
 
-
     @Override
     public Resource load(String filename) {
         try {
