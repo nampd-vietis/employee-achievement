@@ -1,9 +1,6 @@
 package dev.vietis.nampd.employee.achievement.exception;
 
-import dev.vietis.nampd.employee.achievement.model.GenericResponse;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 

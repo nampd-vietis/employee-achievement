@@ -1,9 +1,11 @@
 package dev.vietis.nampd.employee.achievement.controller;
 
 import dev.vietis.nampd.employee.achievement.model.dto.DepartmentAchievementsSumDTO;
+import dev.vietis.nampd.employee.achievement.model.dto.DepartmentDTO;
 import dev.vietis.nampd.employee.achievement.model.dto.EmployeeAchievementsSumDTO;
 import dev.vietis.nampd.employee.achievement.model.dto.EmployeeDTO;
 import dev.vietis.nampd.employee.achievement.model.entity.Achievement;
+import dev.vietis.nampd.employee.achievement.model.response.PagedResponse;
 import dev.vietis.nampd.employee.achievement.service.AchievementService;
 import dev.vietis.nampd.employee.achievement.service.EmployeeService;
 import org.springframework.stereotype.Controller;
@@ -25,9 +27,14 @@ public class AchievementController {
     }
 
     @GetMapping
-    public String getAllAchievements(Model model) {
-        List<Achievement> achievements = achievementService.getAllAchievements();
-        model.addAttribute("achievements", achievements);
+    public String getAllAchievements(@RequestParam(defaultValue = "1") int page,
+                                     @RequestParam(defaultValue = "5") int size,
+                                     Model model) {
+        PagedResponse<Achievement> achievementPagedResponse = achievementService.getAchievementsPaginated(page, size);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", achievementPagedResponse.getTotalPages());
+        model.addAttribute("pageSize", size);
+        model.addAttribute("achievements", achievementPagedResponse.getContent());
         return "achievement/list";
     }
 

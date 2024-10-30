@@ -1,6 +1,7 @@
 package dev.vietis.nampd.employee.achievement.config;
 
 import dev.vietis.nampd.employee.achievement.auth.AuthInterceptor;
+import jakarta.validation.Payload;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

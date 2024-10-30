@@ -1,0 +1,18 @@
+<div th:fragment="simple-pagination(baseUrl, totalPages, currentPage)">
+    <div th:if="${totalPages > 1}" class="pagination">
+        <ul>
+            <li th:if="${currentPage > 1}">
+                <a th:href="|${baseUrl}?page=${currentPage - 1}|" class="pagination-link">«</a>
+            </li>
+
+            <li th:each="i : ${#numbers.sequence(1, totalPages)}">
+                <a th:href="|${baseUrl}?page=${i}|" class="pagination-link"
+                   th:class="${i == currentPage ? 'active' : ''}" th:text="${i}"></a>
+            </li>
+
+            <li th:if="${currentPage < totalPages}">
+                <a th:href="|${baseUrl}?page=${currentPage + 1}|" class="pagination-link">»</a>
+            </li>
+        </ul>
+    </div>
+</div>

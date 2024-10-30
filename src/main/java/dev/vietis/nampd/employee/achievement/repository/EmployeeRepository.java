@@ -2,6 +2,8 @@ package dev.vietis.nampd.employee.achievement.repository;
 
 import dev.vietis.nampd.employee.achievement.model.entity.Department;
 import dev.vietis.nampd.employee.achievement.model.entity.Employee;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,4 +27,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
                                    @Param("email") String email,
                                    @Param("phoneNumber") String phoneNumber,
                                    @Param("departmentName") String departmentName);
+
+    Page<Employee> findByPasswordIsNull(Pageable pageable);
 }
+

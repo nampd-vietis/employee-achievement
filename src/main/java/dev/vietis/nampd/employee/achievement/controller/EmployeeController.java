@@ -2,6 +2,7 @@ package dev.vietis.nampd.employee.achievement.controller;
 
 import dev.vietis.nampd.employee.achievement.model.dto.DepartmentDTO;
 import dev.vietis.nampd.employee.achievement.model.dto.EmployeeDTO;
+import dev.vietis.nampd.employee.achievement.model.response.PagedResponse;
 import dev.vietis.nampd.employee.achievement.service.DepartmentService;
 import dev.vietis.nampd.employee.achievement.service.EmployeeService;
 import dev.vietis.nampd.employee.achievement.service.FileStorageService;
@@ -30,9 +31,14 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public String getAllEmployees(Model model) {
-        List<EmployeeDTO> employees = employeeService.getAllEmployees();
-        model.addAttribute("employees", employees);
+    public String getAllEmployees(@RequestParam(defaultValue = "1") int page,
+                                  @RequestParam(defaultValue = "5") int size,
+                                  Model model) {
+        PagedResponse<EmployeeDTO> employeePagedResponse = employeeService.getEmployeesPaginated(page, size);
+        model.addAttribute("employees", employeePagedResponse.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", employeePagedResponse.getTotalPages());
+        model.addAttribute("pageSize", size);
         return "employee/list";
     }
 

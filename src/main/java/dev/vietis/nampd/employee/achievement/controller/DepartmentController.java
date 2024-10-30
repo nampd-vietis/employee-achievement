@@ -1,6 +1,7 @@
 package dev.vietis.nampd.employee.achievement.controller;
 
 import dev.vietis.nampd.employee.achievement.model.dto.DepartmentDTO;
+import dev.vietis.nampd.employee.achievement.model.response.PagedResponse;
 import dev.vietis.nampd.employee.achievement.service.DepartmentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,26 +18,24 @@ public class DepartmentController {
         this.departmentService = departmentService;
     }
 
-    // Lấy tất cả phòng ban
+//    @GetMapping
+//    public String getAllDepartments(Model model) {
+//        List<DepartmentDTO> departments = departmentService.getAllDepartments();
+//        model.addAttribute("departments", departments);
+//        return "department/list";
+//    }
+
     @GetMapping
-    public String getAllDepartments(Model model) {
-        List<DepartmentDTO> departments = departmentService.getAllDepartments();
-        model.addAttribute("departments", departments);
+    public String getAllDepartments(@RequestParam(defaultValue = "1") int page,
+                                    @RequestParam(defaultValue = "5") int size,
+                                    Model model) {
+        PagedResponse<DepartmentDTO> departmentPagedResponse = departmentService.getDepartmentsPaginated(page, size);
+        model.addAttribute("departments", departmentPagedResponse.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", departmentPagedResponse.getTotalPages());
+        model.addAttribute("pageSize", size);
         return "department/list";
     }
-
-//    // Lấy phòng ban theo ID
-//    @GetMapping("/{id}")
-//    public String getDepartmentById(@PathVariable Long id, Model model) {
-//        try {
-//            DepartmentDTO department = departmentService.getDepartmentById(id);
-//            model.addAttribute("department", department);
-//            return "addForm"; // Trả về view chi tiết phòng ban
-//        } catch (IllegalArgumentException e) {
-//            model.addAttribute("error", "Department not exist");
-//            return "error"; // Trả về view lỗi
-//        }
-//    }
 
     // Hiển thị form tạo mới
     @GetMapping("/new")
@@ -45,7 +44,6 @@ public class DepartmentController {
         return "department/add_form";
     }
 
-    // Xử lý tạo mới
     @PostMapping
     public String createDepartment(@ModelAttribute("department") DepartmentDTO departmentDTO) {
         departmentService.createDepartment(departmentDTO);
@@ -60,7 +58,6 @@ public class DepartmentController {
         return "department/update_form";
     }
 
-    // Xử lý chỉnh sửa
     @PostMapping("/update/{id}")
     public String updateDepartment(@PathVariable Long id,
                                    @ModelAttribute("department") DepartmentDTO departmentDTO) {
@@ -68,7 +65,6 @@ public class DepartmentController {
         return "redirect:/admin/departments";
     }
 
-    // Xóa phòng ban
     @PostMapping("/delete/{id}")
     public String deleteDepartment(@PathVariable Long id, Model model) {
         departmentService.deleteDepartment(id);

@@ -5,14 +5,15 @@ import dev.vietis.nampd.employee.achievement.exception.ErrorCode;
 import dev.vietis.nampd.employee.achievement.mapper.DepartmentMapper;
 import dev.vietis.nampd.employee.achievement.model.dto.DepartmentDTO;
 import dev.vietis.nampd.employee.achievement.model.entity.Department;
+import dev.vietis.nampd.employee.achievement.model.response.PagedResponse;
 import dev.vietis.nampd.employee.achievement.repository.DepartmentRepository;
 import dev.vietis.nampd.employee.achievement.service.DepartmentService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,6 +69,23 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .orElseThrow(() -> new AppException(ErrorCode.DEPARTMENT_NOT_FOUND));
 
         departmentRepository.delete(department);
+    }
+
+    @Override
+    public PagedResponse<DepartmentDTO> getDepartmentsPaginated(int page, int size) {
+        Page<Department> departmentPage = departmentRepository.findAll(PageRequest.of(page - 1, size, Sort.by(Sort.Direction.ASC, "id")));
+
+        List<DepartmentDTO> departmentDtoList = departmentPage
+                .map(departmentMapper::toDepartmentDto)
+                .getContent();
+
+        return new PagedResponse<>(
+                departmentDtoList,
+                departmentPage.getNumber(),
+                departmentPage.getSize(),
+                departmentPage.getTotalElements(),
+                departmentPage.getTotalPages()
+        );
     }
 
 //    @Override

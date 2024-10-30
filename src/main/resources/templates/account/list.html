@@ -8,6 +8,7 @@
   <link rel="stylesheet" th:href="@{/css/header.css}">
   <link rel="stylesheet" th:href="@{/css/footer.css}">
   <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/pagination.css}">
 </head>
 <body>
 
@@ -51,7 +52,8 @@
     </tbody>
   </table>
 
-  <!-- Nút Tạo mới -->
+  <div th:replace="fragments/pagination :: simple-pagination(baseUrl='/admin/accounts', totalPages=${totalPages}, currentPage=${currentPage})"></div>
+
   <div class="create-button-container">
     <a href="/admin/accounts/new" class="create-button" th:text="#{button.create}">Tạo mới</a>
   </div>

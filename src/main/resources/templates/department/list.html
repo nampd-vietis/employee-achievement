@@ -8,6 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/pagination.css}">
 </head>
 <body>
 
@@ -34,7 +35,7 @@
         <tr th:each="department : ${departments}">
             <td th:text="${department.id}"></td>
             <td th:text="${department.departmentName}"></td>
-            <td style="text-align: center;"> <!-- Căn giữa các button -->
+            <td style="text-align: center;">
                 <form th:action="@{/admin/departments/{id}/employees(id=${department.id})}" method="get" style="display:inline;">
                     <button type="submit" th:text="#{button.view_employees}">Xem dsnv</button>
                 </form> |
@@ -50,7 +51,8 @@
         </tbody>
     </table>
 
-    <!-- Nút Tạo mới -->
+    <div th:replace="fragments/pagination :: simple-pagination(baseUrl='/admin/departments', totalPages=${totalPages}, currentPage=${currentPage})"></div>
+
     <div class="create-button-container">
         <a href="/admin/departments/new" class="create-button" th:text="#{button.create}">Tạo mới</a>
     </div>

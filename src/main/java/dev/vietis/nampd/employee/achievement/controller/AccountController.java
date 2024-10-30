@@ -4,6 +4,7 @@ import dev.vietis.nampd.employee.achievement.exception.AppException;
 import dev.vietis.nampd.employee.achievement.exception.ErrorCode;
 import dev.vietis.nampd.employee.achievement.model.dto.AccountDTO;
 import dev.vietis.nampd.employee.achievement.model.entity.Employee;
+import dev.vietis.nampd.employee.achievement.model.response.PagedResponse;
 import dev.vietis.nampd.employee.achievement.service.EmployeeService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +27,14 @@ public class AccountController {
     }
 
     @GetMapping
-    public String getAllAccounts(Model model) {
-        List<AccountDTO> accounts = employeeService.getAllAccounts();
-        model.addAttribute("accounts", accounts);
+    public String getAllAccounts(@RequestParam(defaultValue = "1") int page,
+                                 @RequestParam(defaultValue = "5") int size,
+                                 Model model) {
+        PagedResponse<AccountDTO> accountPagedResponse = employeeService.getAccountsPaginated(page, size);
+        model.addAttribute("accounts", accountPagedResponse.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", accountPagedResponse.getTotalPages());
+        model.addAttribute("pageSize", size);
         return "account/list";
     }
 
@@ -45,7 +51,6 @@ public class AccountController {
         return "account/add_form";
     }
 
-    // Xử lý việc tạo tài khoản
     @PostMapping()
     public String createAccount(@ModelAttribute @Valid AccountDTO accountDTO,
                                 BindingResult result) {
@@ -69,7 +74,6 @@ public class AccountController {
         return "account/update_form";
     }
 
-    // Xử lý việc cập nhật tài khoản
     @PostMapping("/update/{employeeId}")
     public String updateAccount(@PathVariable Long employeeId,
                                 @ModelAttribute @Valid AccountDTO accountDTO,
@@ -82,7 +86,6 @@ public class AccountController {
         return "redirect:/admin/accounts";
     }
 
-    // Xóa tài khoản
     @GetMapping("/delete/{employeeId}")
     public String deleteAccount(@PathVariable Long employeeId) {
         employeeService.deleteAccount(employeeId);

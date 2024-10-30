@@ -7,16 +7,19 @@ import dev.vietis.nampd.employee.achievement.model.dto.AccountDTO;
 import dev.vietis.nampd.employee.achievement.model.dto.EmployeeDTO;
 import dev.vietis.nampd.employee.achievement.model.entity.Department;
 import dev.vietis.nampd.employee.achievement.model.entity.Employee;
+import dev.vietis.nampd.employee.achievement.model.response.PagedResponse;
 import dev.vietis.nampd.employee.achievement.repository.DepartmentRepository;
 import dev.vietis.nampd.employee.achievement.repository.EmployeeRepository;
 import dev.vietis.nampd.employee.achievement.service.EmployeeService;
 import dev.vietis.nampd.employee.achievement.service.FileStorageService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -57,6 +60,23 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .stream()
                 .map(employeeMapper::toEmployeeDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public PagedResponse<EmployeeDTO> getEmployeesPaginated(int page, int size) {
+        Page<Employee> employeePage = employeeRepository.findAll(PageRequest.of(page - 1, size, Sort.by(Sort.Direction.ASC, "id")));
+
+        List<EmployeeDTO> employeeDTOList = employeePage
+                .map(employeeMapper::toEmployeeDto)
+                .getContent();
+
+        return new PagedResponse<>(
+                employeeDTOList,
+                employeePage.getNumber(),
+                employeePage.getSize(),
+                employeePage.getTotalElements(),
+                employeePage.getTotalPages()
+        );
     }
 
 //    @Override
@@ -155,7 +175,32 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .collect(Collectors.toList());
     }
 
-    // Tạo tài khoản cho một nhân viên
+    @Override
+    public PagedResponse<AccountDTO> getAccountsPaginated(int page, int size) {
+        Page<Employee> employeePage = employeeRepository.findByPasswordIsNull((PageRequest.of(page - 1, size, Sort.by(Sort.Direction.ASC, "id"))));
+
+        List<AccountDTO> accountDTOList = employeePage
+                .getContent()
+                .stream()
+                .map(employee -> {
+                    AccountDTO accountDTO = new AccountDTO();
+                    accountDTO.setEmployeeId(employee.getId());
+                    accountDTO.setFullName(employee.getFullName());
+                    accountDTO.setEmail(employee.getEmail());
+                    accountDTO.setPassword(employee.getPassword());
+                    return accountDTO;
+                })
+                .toList();
+
+        return new PagedResponse<>(
+                accountDTOList,
+                employeePage.getNumber(),
+                employeePage.getSize(),
+                employeePage.getTotalElements(),
+                employeePage.getTotalPages()
+        );
+    }
+
     @Override
     public void createAccount(AccountDTO accountDTO) {
         Employee employee = employeeRepository.findById(accountDTO.getEmployeeId())
@@ -168,7 +213,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.save(employee);
     }
 
-    // Cập nhật tài khoản
     @Override
     public void updateAccount(Long employeeId, AccountDTO accountDTO) {
         Employee employee = employeeRepository.findById(employeeId)
@@ -180,15 +224,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.save(employee);
     }
 
-    // Xóa tài khoản của một nhân viên
     @Override
     public void deleteAccount(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_FOUND));
 
-        // Xóa password
         employee.setPassword(null);
 
         employeeRepository.save(employee);
     }
+
+
 }

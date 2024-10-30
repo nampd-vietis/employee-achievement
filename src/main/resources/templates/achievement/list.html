@@ -8,6 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/pagination.css}">
 </head>
 <body>
 
@@ -42,7 +43,7 @@
             </td>
             <td th:text="${achievement.reason}"></td>
             <td th:text="${achievement.dateRecorded}"></td>
-            <td style="text-align: center;"> <!-- Căn giữa các button -->
+            <td style="text-align: center;">
                 <form th:action="@{/admin/achievements/edit/{id}(id=${achievement.id})}" method="get" style="display:inline;">
                     <button type="submit" th:text="#{button.update}">Sửa</button>
                 </form> |
@@ -55,7 +56,8 @@
         </tbody>
     </table>
 
-    <!-- Nút Tạo mới -->
+    <div th:replace="fragments/pagination :: simple-pagination(baseUrl='/admin/achievements', totalPages=${totalPages}, currentPage=${currentPage})"></div>
+
     <div class="create-button-container">
         <a href="/admin/achievements/new" class="create-button" th:text="#{button.create}">Tạo mới</a>
     </div>

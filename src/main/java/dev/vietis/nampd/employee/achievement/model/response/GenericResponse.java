@@ -1,4 +1,4 @@
-package dev.vietis.nampd.employee.achievement.model;
+package dev.vietis.nampd.employee.achievement.model.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
